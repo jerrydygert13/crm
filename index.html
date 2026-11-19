@@ -26,300 +26,454 @@
     ============================================================
   -->
 
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
   <script src="supabase-config.js"></script>
-
+  <meta name="theme-color" content="#09090b" />
 
   <style>
     :root {
-      --black:  #080808;
-      --deep:   #0f0f0f;
-      --card:   #161616;
-      --red:    #d93025;
-      --orange: #e8621a;
-      --white:  #f2f2f2;
-      --muted:  #8a8a8a;
-      --border: #242424;
-      --green:  #2e9e5b;
-      --amber:  #d9a12a;
+      color-scheme: dark;
+      /* surfaces */
+      --black:  #09090b;
+      --deep:   #111114;
+      --card:   #17171b;
+      --card-2: #1e1e23;
+      --hover:  rgba(255,255,255,0.045);
+      /* text */
+      --white:  #f4f4f5;
+      --muted:  #a1a1aa;
+      --dim:    #71717a;
+      /* lines */
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.14);
+      /* brand + status */
+      --red:    #e5372b;
+      --red-soft: rgba(229,55,43,0.12);
+      --orange: #f06a24;
+      --green:  #22c55e;
+      --amber:  #f5a524;
+      --blue:   #60a5fa;
+      --grad:   linear-gradient(135deg, var(--red), var(--orange));
+      /* shape */
+      --r-sm: 8px; --r: 12px; --r-lg: 16px;
+      --shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px -12px rgba(0,0,0,0.6);
+      --ease: cubic-bezier(.2,.8,.2,1);
     }
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { -webkit-text-size-adjust:100%; }
     body {
       background: var(--black); color: var(--white);
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.9rem; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
-    h1,h2,h3, .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-weight: 400; }
-    button { font-family: 'DM Sans', sans-serif; cursor: pointer; }
+    h1,h2,h3, .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.5px; font-weight: 400; }
+    button { font-family: inherit; cursor: pointer; color: inherit; }
+    a { color: inherit; }
+    .i { width:18px; height:18px; flex-shrink:0; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .i.sm { width:15px; height:15px; }
+
     input, select, textarea {
-      font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
-      background: var(--card); border: 1px solid var(--border);
-      color: var(--white); padding: 0.6rem 0.8rem; width: 100%;
+      font-family: inherit; font-size: 0.9rem;
+      background: var(--card); border: 1px solid var(--border-strong); border-radius: var(--r-sm);
+      color: var(--white); padding: 0.65rem 0.85rem; width: 100%;
+      transition: border-color .15s, box-shadow .15s, background .15s;
     }
-    input:focus, select:focus, textarea:focus { outline:none; border-color: var(--red); }
-    label { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.35rem; }
-    ::-webkit-scrollbar { width:8px; height:8px; }
-    ::-webkit-scrollbar-thumb { background:#2a2a2a; }
+    input::placeholder, textarea::placeholder { color: var(--dim); }
+    input:hover, select:hover, textarea:hover { border-color: rgba(255,255,255,0.22); }
+    input:focus, select:focus, textarea:focus { outline:none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(229,55,43,0.22); }
+    select { appearance:none; padding-right:2.2rem; cursor:pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position: right 0.8rem center; }
+    input[type=checkbox] { width:18px; height:18px; accent-color: var(--red); cursor:pointer; padding:0; }
+    input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor:pointer; }
+    label { font-size:0.78rem; font-weight:500; color:var(--muted); display:block; margin-bottom:0.4rem; }
+    :focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+    ::selection { background: rgba(229,55,43,0.35); }
+    ::-webkit-scrollbar { width:10px; height:10px; }
+    ::-webkit-scrollbar-thumb { background:#2a2a30; border-radius:10px; border:2px solid var(--black); }
     ::-webkit-scrollbar-track { background:transparent; }
+
+    /* ── BUTTONS ───────────────────────────── */
+    .btn, .btn-ghost {
+      display:inline-flex; align-items:center; justify-content:center; gap:0.45rem;
+      font-size:0.8rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
+      border-radius: var(--r-sm); padding:0.62rem 1.1rem; min-height:40px; white-space:nowrap;
+      transition: background .18s var(--ease), border-color .18s, color .18s, transform .1s, box-shadow .18s;
+    }
+    .btn { background: var(--grad); color:#fff; border:none;
+      box-shadow: 0 6px 18px -8px rgba(229,55,43,0.7), inset 0 1px 0 rgba(255,255,255,0.18); }
+    .btn:hover { filter: brightness(1.08); box-shadow: 0 8px 22px -8px rgba(240,106,36,0.8), inset 0 1px 0 rgba(255,255,255,0.2); }
+    .btn:active, .btn-ghost:active { transform: translateY(1px); }
+    .btn.full { width:100%; }
+    .btn-ghost { background: var(--card); border:1px solid var(--border-strong); color: var(--white); }
+    .btn-ghost:hover { background: var(--card-2); border-color: rgba(255,255,255,0.24); }
+    .btn-danger { color:#ff8a80; border-color: rgba(229,55,43,0.35); background: rgba(229,55,43,0.06); }
+    .btn-danger:hover { color:#fff; background: rgba(229,55,43,0.18); border-color: var(--red); }
+    .icon-btn { min-height:34px; width:34px; padding:0; }
+    .login-error { color:#ff8a80; font-size:0.82rem; margin-top:0.9rem; display:none; }
 
     /* ── LOGIN ─────────────────────────────── */
     #loginScreen {
-      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1rem;
       background:
-        linear-gradient(135deg, rgba(217,48,37,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 30%, rgba(232,98,26,0.05), transparent 60%);
+        radial-gradient(600px 400px at 20% 10%, rgba(229,55,43,0.14), transparent 70%),
+        radial-gradient(500px 400px at 85% 90%, rgba(240,106,36,0.10), transparent 70%),
+        var(--black);
     }
     .login-box {
-      background: var(--deep); border:1px solid var(--border);
-      padding: 3rem; width: 360px; text-align:center;
+      background: rgba(23,23,27,0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border:1px solid var(--border-strong); border-radius: var(--r-lg);
+      padding: 2.5rem 2.2rem 2rem; width: 100%; max-width: 380px; text-align:center;
+      box-shadow: 0 30px 80px -30px rgba(0,0,0,0.8);
     }
-    .login-box::before { content:''; display:block; height:3px; margin:-3rem -3rem 2rem;
-      background: linear-gradient(90deg, var(--red), var(--orange), var(--red)); }
-    .login-logo { font-family:'Bebas Neue'; font-size:2.2rem; letter-spacing:3px; margin-bottom:0.3rem; }
-    .login-logo em { color:var(--red); font-style:normal; }
-    .login-sub { font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:2rem; }
+    .brand-mark {
+      width:48px; height:48px; border-radius:12px; background: var(--grad);
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family:'Bebas Neue'; font-size:1.4rem; letter-spacing:1px; color:#fff;
+      box-shadow: 0 10px 30px -10px rgba(229,55,43,0.8), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+    .login-box .brand-mark { margin-bottom:1.1rem; }
+    .login-logo { font-family:'Bebas Neue'; font-size:2rem; letter-spacing:2.5px; line-height:1; }
+    .login-logo em, .side-logo em { color:var(--red); font-style:normal; }
+    .login-sub { font-size:0.82rem; color:var(--muted); margin:0.45rem 0 1.8rem; }
     .login-box .field { margin-bottom:1rem; text-align:left; }
-    .btn {
-      font-family:'Bebas Neue'; letter-spacing:2px; font-size:1rem;
-      background:var(--red); color:#fff; border:none; padding:0.7rem 1.6rem;
-      transition: background 0.2s;
-    }
-    .btn:hover { background:var(--orange); }
-    .btn.full { width:100%; }
-    .btn-ghost {
-      font-size:0.72rem; letter-spacing:2px; text-transform:uppercase;
-      background:transparent; border:1px solid var(--border); color:var(--muted);
-      padding:0.55rem 1.1rem; transition:all 0.2s;
-    }
-    .btn-ghost:hover { border-color:var(--muted); color:var(--white); }
-    .btn-danger { border-color:rgba(217,48,37,0.5); color:var(--red); }
-    .btn-danger:hover { border-color:var(--red); color:var(--red); }
-    .login-error { color:var(--red); font-size:0.78rem; margin-top:0.8rem; display:none; }
+    .login-box .hint { margin-top:1.4rem; }
 
     /* ── APP LAYOUT ────────────────────────── */
     #app { display:none; min-height:100vh; }
-    .app-grid { display:grid; grid-template-columns: 220px 1fr; min-height:100vh; }
+    .app-grid { display:grid; grid-template-columns: 248px 1fr; min-height:100vh; }
+    .app-grid > div { min-width:0; } /* lets wide tables scroll inside their panel instead of stretching the page */
 
-    /* sidebar */
     .sidebar {
       background: var(--deep); border-right:1px solid var(--border);
-      padding: 1.5rem 0; position: sticky; top:0; height:100vh;
-      display:flex; flex-direction:column;
+      padding: 1.2rem 0.85rem; position: sticky; top:0; height:100vh;
+      display:flex; flex-direction:column; gap:0.2rem;
     }
-    .side-logo { font-family:'Bebas Neue'; font-size:1.4rem; letter-spacing:3px; padding:0 1.4rem 1.2rem; border-bottom:1px solid var(--border); }
-    .side-logo em { color:var(--red); font-style:normal; }
-    .side-sub { font-size:0.58rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); padding:0.5rem 1.4rem 1rem; }
+    .side-brand { display:flex; align-items:center; gap:0.75rem; padding:0.3rem 0.55rem 1.3rem; }
+    .side-brand .brand-mark { width:36px; height:36px; font-size:1.05rem; border-radius:10px; }
+    .side-logo { font-family:'Bebas Neue'; font-size:1.3rem; letter-spacing:2px; line-height:1; }
+    .side-sub { font-size:0.72rem; color:var(--dim); margin-top:2px; }
+    .nav-label { font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--dim); padding:0.4rem 0.7rem 0.5rem; }
     .nav-item {
-      display:flex; align-items:center; gap:0.7rem;
-      padding: 0.75rem 1.4rem; color: var(--muted);
-      font-size: 0.82rem; letter-spacing:1px; cursor:pointer;
-      border-left: 2px solid transparent; transition:all 0.15s;
-      background:none; border-top:none; border-right:none; border-bottom:none;
-      width:100%; text-align:left;
+      display:flex; align-items:center; gap:0.75rem; position:relative;
+      padding: 0.62rem 0.75rem; min-height:42px; color: var(--muted);
+      font-size: 0.88rem; font-weight:500; border-radius: var(--r-sm);
+      background:none; border:none; width:100%; text-align:left;
+      transition: background .15s, color .15s;
     }
-    .nav-item:hover { color:var(--white); }
-    .nav-item.active { color:var(--white); border-left-color:var(--red); background:rgba(217,48,37,0.08); }
-    .nav-item .ni-icon { font-size:1rem; width:20px; text-align:center; }
+    .nav-item:hover { color:var(--white); background: var(--hover); }
+    .nav-item.active { color:var(--white); background: var(--red-soft); }
+    .nav-item.active .i { color: var(--red); }
+    .nav-item.active::before { content:''; position:absolute; left:-0.85rem; top:9px; bottom:9px; width:3px; border-radius:0 3px 3px 0; background: var(--grad); }
     .nav-badge {
-      margin-left:auto; background:var(--red); color:#fff; font-size:0.62rem;
-      min-width:18px; height:18px; border-radius:9px;
-      display:flex; align-items:center; justify-content:center; padding:0 5px;
-      font-weight:700;
+      margin-left:auto; background:var(--red); color:#fff; font-size:0.7rem; font-weight:700;
+      min-width:20px; height:20px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; padding:0 6px;
+      font-variant-numeric: tabular-nums;
     }
-    .side-bottom { margin-top:auto; padding:1rem 1.4rem; border-top:1px solid var(--border); }
-    .side-bottom .btn-ghost { width:100%; font-size:0.62rem; padding:0.5rem; }
+    .side-bottom { margin-top:auto; padding-top:1rem; border-top:1px solid var(--border); }
+    .side-bottom .btn-ghost { width:100%; }
+    .scrim { display:none; }
 
-    /* main */
-    .main { padding: 2rem 2.5rem; max-width: 1250px; }
-    .page-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; gap:1rem; flex-wrap:wrap; }
-    .page-head h1 { font-size: 2.2rem; line-height:1; }
-    .page-head .sub { font-size:0.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-top:0.3rem; }
-    .head-actions { display:flex; gap:0.6rem; }
+    .topbar { display:none; }
+    .main { padding: 2.2rem 2.5rem 3rem; width:100%; max-width: 1320px; margin: 0 auto; }
+    .page-head { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1.6rem; gap:1rem; flex-wrap:wrap; }
+    .page-head h1 { font-size: 2.4rem; line-height:1; }
+    .page-head .sub { font-size:0.88rem; color:var(--muted); margin-top:0.35rem; }
+    .head-actions { display:flex; gap:0.6rem; flex-wrap:wrap; }
+    section[id^=view-] { animation: fadeUp .3s var(--ease); }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform:none; } }
 
     /* ── STAT CARDS ────────────────────────── */
-    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:2rem; }
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
     .stat-card {
-      background:var(--card); border:1px solid var(--border); padding:1.2rem 1.4rem;
-      position:relative; overflow:hidden;
+      background: linear-gradient(180deg, var(--card-2), var(--card)); border:1px solid var(--border);
+      border-radius: var(--r); padding:1.15rem 1.25rem 1.1rem; position:relative; overflow:hidden;
+      box-shadow: var(--shadow); transition: border-color .2s, transform .2s var(--ease);
     }
-    .stat-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
-      background:linear-gradient(to bottom, var(--red), var(--orange)); }
-    .stat-label { font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
-    .stat-value { font-family:'Bebas Neue'; font-size:2.4rem; line-height:1; }
-    .stat-note { font-size:0.7rem; color:var(--muted); margin-top:0.4rem; }
+    .stat-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+    .stat-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; }
+    .stat-ico { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; background: var(--hover); color: var(--muted); }
+    .stat-ico.red   { background: var(--red-soft); color: var(--red); }
+    .stat-ico.green { background: rgba(34,197,94,0.12); color: var(--green); }
+    .stat-ico.blue  { background: rgba(96,165,250,0.12); color: var(--blue); }
+    .stat-ico.amber { background: rgba(245,165,36,0.12); color: var(--amber); }
+    .stat-label { font-size:0.8rem; font-weight:500; color:var(--muted); }
+    .stat-value { font-family:'Bebas Neue'; font-size:2.6rem; line-height:1; letter-spacing:1px; font-variant-numeric: tabular-nums; }
+    .stat-note { font-size:0.78rem; color:var(--dim); margin-top:0.45rem; }
     .stat-value.red { color:var(--red); }
     .stat-value.green { color:var(--green); }
 
     /* ── PANELS ────────────────────────────── */
-    .panel { background:var(--deep); border:1px solid var(--border); margin-bottom:1.5rem; }
+    .dash-cols { display:grid; grid-template-columns: 1.15fr 1fr; gap:1.25rem; align-items:start; }
+    .dash-cols > .panel:first-child { grid-row: span 2; }
+    .panel { background:var(--deep); border:1px solid var(--border); border-radius: var(--r); margin-bottom:1.25rem; overflow:hidden; box-shadow: var(--shadow); }
+    .dash-cols .panel { margin-bottom:0; }
     .panel-head {
-      padding:1rem 1.4rem; border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between;
-      font-family:'Bebas Neue'; font-size:1.05rem; letter-spacing:2px;
+      padding:0.95rem 1.25rem; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:0.8rem;
+      font-size:0.95rem; font-weight:600;
     }
-    .panel-body { padding:1.2rem 1.4rem; }
-    .empty-note { color:var(--muted); font-size:0.82rem; padding:1rem 0; text-align:center; font-style:italic; }
+    .panel-head > span:first-child { display:flex; align-items:center; gap:0.6rem; }
+    .panel-head .i { color: var(--muted); }
+    .panel-head .ph-note { font-size:0.78rem; font-weight:400; color:var(--dim); }
+    .panel-body { padding:1.15rem 1.25rem; }
+    .panel-body.list { padding:0.35rem 0.6rem; }
+    .empty-note { color:var(--dim); font-size:0.86rem; padding:1.6rem 0.5rem; text-align:center; }
 
     /* ── TABLES ────────────────────────────── */
     table { width:100%; border-collapse:collapse; }
     th {
-      font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted);
-      text-align:left; padding:0.6rem 0.8rem; border-bottom:1px solid var(--border);
+      font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--dim);
+      text-align:left; padding:0.8rem 1rem; border-bottom:1px solid var(--border); background: var(--card); white-space:nowrap;
     }
-    td { padding:0.75rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.84rem; vertical-align:middle; }
-    tr.rowlink { cursor:pointer; transition:background 0.15s; }
-    tr.rowlink:hover { background:rgba(217,48,37,0.06); }
+    td { padding:0.85rem 1rem; border-bottom:1px solid var(--border); font-size:0.88rem; vertical-align:middle; }
+    tbody tr:last-child td { border-bottom:none; }
+    tr.rowlink { cursor:pointer; transition:background .15s; }
+    tr.rowlink:hover { background: var(--hover); }
     .t-muted { color:var(--muted); }
-    .t-money { font-family:'Bebas Neue'; font-size:1.05rem; letter-spacing:1px; }
+    .t-money { font-family:'Bebas Neue'; font-size:1.15rem; letter-spacing:0.5px; font-variant-numeric: tabular-nums; }
     .t-actions { display:flex; gap:0.4rem; }
 
     /* ── STAGE BADGES ──────────────────────── */
     .stage {
-      display:inline-block; font-size:0.6rem; letter-spacing:1.5px; text-transform:uppercase;
-      padding:0.22rem 0.6rem; border:1px solid; white-space:nowrap;
+      display:inline-flex; align-items:center; gap:0.4rem; font-size:0.72rem; font-weight:600;
+      padding:0.22rem 0.6rem; border:1px solid; border-radius:999px; white-space:nowrap; text-transform:capitalize;
     }
-    .stage-new        { color:#e8621a; border-color:rgba(232,98,26,0.4);  background:rgba(232,98,26,0.08); }
-    .stage-contacted  { color:#d9a12a; border-color:rgba(217,161,42,0.4); background:rgba(217,161,42,0.08); }
-    .stage-scheduled  { color:#5b8fd9; border-color:rgba(91,143,217,0.4); background:rgba(91,143,217,0.08); }
-    .stage-won        { color:#2e9e5b; border-color:rgba(46,158,91,0.4);  background:rgba(46,158,91,0.08); }
-    .stage-lost       { color:#777;    border-color:#333;                 background:rgba(255,255,255,0.03); }
+    .stage::before { content:''; width:6px; height:6px; border-radius:50%; background: currentColor; }
+    .stage-new        { color:#ff8a4c; border-color:rgba(240,106,36,0.3);  background:rgba(240,106,36,0.1); }
+    .stage-contacted  { color:#f5b94a; border-color:rgba(245,165,36,0.3);  background:rgba(245,165,36,0.1); }
+    .stage-scheduled  { color:#7cb5fb; border-color:rgba(96,165,250,0.3);  background:rgba(96,165,250,0.1); }
+    .stage-won        { color:#4ade80; border-color:rgba(34,197,94,0.3);   background:rgba(34,197,94,0.1); }
+    .stage-lost       { color:#a1a1aa; border-color:rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); }
 
     /* ── FILTER CHIPS ──────────────────────── */
-    .chips { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+    .chips { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.1rem; }
     .chip {
-      background:var(--card); border:1px solid var(--border); color:var(--muted);
-      padding:0.4rem 0.9rem; font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase;
-      transition:all 0.15s;
+      display:inline-flex; align-items:center; gap:0.45rem;
+      background:var(--card); border:1px solid var(--border); color:var(--muted); border-radius:999px;
+      padding:0.45rem 0.95rem; min-height:36px; font-size:0.82rem; font-weight:500;
+      transition: all .15s;
     }
-    .chip:hover { color:var(--white); }
-    .chip.active { border-color:var(--red); color:var(--white); background:rgba(217,48,37,0.1); }
-    .chip b { color:var(--red); margin-left:0.3rem; }
+    .chip:hover { color:var(--white); border-color: var(--border-strong); }
+    .chip.active { border-color: rgba(229,55,43,0.5); color:var(--white); background: var(--red-soft); }
+    .chip b { font-size:0.7rem; font-weight:700; color:var(--white); background: rgba(255,255,255,0.08); border-radius:999px; padding:0.05rem 0.45rem; font-variant-numeric: tabular-nums; }
+    .chip.active b { background: var(--red); }
 
     /* ── MODAL ─────────────────────────────── */
     .modal-back {
-      position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000;
+      position:fixed; inset:0; background:rgba(5,5,7,0.7); z-index:1000;
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
       display:none; align-items:flex-start; justify-content:center;
-      padding: 4vh 1rem; overflow-y:auto;
+      padding: 6vh 1rem; overflow-y:auto;
     }
-    .modal-back.open { display:flex; }
+    .modal-back.open { display:flex; animation: fade .18s ease; }
+    .modal-back.open .modal { animation: pop .24s var(--ease); }
+    @keyframes fade { from { opacity:0; } }
+    @keyframes pop { from { opacity:0; transform: translateY(12px) scale(.985); } }
     .modal {
-      background:var(--deep); border:1px solid var(--border);
-      width:100%; max-width:560px; position:relative;
+      background:var(--deep); border:1px solid var(--border-strong); border-radius: var(--r-lg);
+      width:100%; max-width:580px; position:relative; overflow:hidden;
+      box-shadow: 0 40px 100px -30px rgba(0,0,0,0.9);
     }
-    .modal::before { content:''; display:block; height:3px;
-      background:linear-gradient(90deg, var(--red), var(--orange), var(--red)); }
+    .modal::before { content:''; display:block; height:3px; background: var(--grad); }
     .modal-head {
-      padding:1.2rem 1.6rem; border-bottom:1px solid var(--border);
-      display:flex; justify-content:space-between; align-items:center;
+      padding:1.15rem 1.5rem; border-bottom:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center; gap:1rem;
     }
-    .modal-head h2 { font-size:1.5rem; }
-    .modal-close { background:none; border:1px solid var(--border); color:var(--muted);
-      width:30px; height:30px; font-size:0.8rem; }
-    .modal-close:hover { color:var(--white); border-color:var(--muted); }
-    .modal-body { padding:1.5rem 1.6rem; }
+    .modal-head h2 { font-size:1.6rem; line-height:1.1; }
+    .modal-close {
+      background: var(--card); border:1px solid var(--border-strong); color:var(--muted); border-radius: var(--r-sm);
+      width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+      transition: all .15s;
+    }
+    .modal-close:hover { color:var(--white); background: var(--card-2); }
+    .modal-body { padding:1.4rem 1.5rem; }
     .modal-body .field { margin-bottom:1rem; }
     .modal-foot {
-      padding:1.2rem 1.6rem; border-top:1px solid var(--border);
+      padding:1rem 1.5rem; border-top:1px solid var(--border); background: rgba(255,255,255,0.015);
       display:flex; gap:0.6rem; justify-content:flex-end; flex-wrap:wrap;
     }
+    .modal-foot .btn-danger { margin-right:auto; }
 
-    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem 1.2rem; margin-bottom:1.2rem; }
-    .detail-item .d-label { font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:0.2rem; }
-    .detail-item .d-val { font-size:0.88rem; }
-    .detail-item .d-val a { color:var(--red); text-decoration:none; }
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:1.2rem; }
+    .detail-item { background: var(--card); border:1px solid var(--border); border-radius: var(--r-sm); padding:0.7rem 0.85rem; }
+    .detail-item .d-label, .d-label { font-size:0.72rem; font-weight:500; color:var(--dim); margin-bottom:0.25rem; }
+    .detail-item .d-val { font-size:0.92rem; word-break: break-word; }
+    .detail-item .d-val a { color:#ff7a6e; text-decoration:none; }
     .detail-item .d-val a:hover { text-decoration:underline; }
-    .section-label { font-size:0.62rem; letter-spacing:3px; text-transform:uppercase; color:var(--red); margin:1.4rem 0 0.7rem; display:flex; align-items:center; gap:0.8rem; }
+    .section-label { font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--orange); margin:1.5rem 0 0.75rem; display:flex; align-items:center; gap:0.8rem; }
     .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
 
     .timeline { list-style:none; }
-    .timeline li { padding:0.5rem 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.82rem; display:flex; gap:0.8rem; align-items:baseline; }
+    .timeline li { padding:0.6rem 0.3rem; border-bottom:1px solid var(--border); font-size:0.86rem; display:flex; gap:0.8rem; align-items:center; border-radius:6px; }
     .timeline li:last-child { border:none; }
-    .timeline .tl-date { color:var(--muted); font-size:0.7rem; white-space:nowrap; min-width:86px; }
-    .status-select { padding:0.35rem 0.6rem; font-size:0.78rem; width:auto; }
+    .timeline li[onclick]:hover { background: var(--hover); }
+    .timeline .tl-date { color:var(--muted); font-size:0.78rem; white-space:nowrap; min-width:92px; }
+    .status-select { padding:0.4rem 2rem 0.4rem 0.7rem; font-size:0.82rem; width:auto; min-height:34px; }
 
     /* ── CALENDAR ──────────────────────────── */
-    .cal-grid-wrap { background:var(--deep); border:1px solid var(--border); }
-    .cal-toolbar { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.4rem; border-bottom:1px solid var(--border); }
-    .cal-toolbar h2 { font-size:1.6rem; }
+    .cal-grid-wrap { background:var(--deep); border:1px solid var(--border); border-radius: var(--r); overflow:hidden; box-shadow: var(--shadow); }
+    .cal-toolbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.25rem; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .cal-toolbar h2 { font-size:1.7rem; line-height:1; }
     .cal-nav { display:flex; gap:0.4rem; align-items:center; }
-    .cal-nav button { background:var(--card); border:1px solid var(--border); color:var(--muted); padding:0.4rem 0.9rem; }
-    .cal-nav button:hover { color:var(--white); }
-    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); }
-    .cal-dow { padding:0.6rem 0.8rem; font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); text-align:center; }
+    .cal-nav button {
+      display:inline-flex; align-items:center; gap:0.3rem; min-height:36px;
+      background:var(--card); border:1px solid var(--border-strong); color:var(--muted); border-radius: var(--r-sm);
+      padding:0.4rem 0.8rem; font-size:0.8rem; font-weight:600; transition: all .15s;
+    }
+    .cal-nav button:hover { color:var(--white); background: var(--card-2); }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); }
+    .cal-dow { padding:0.65rem 0.6rem; font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--dim); border-bottom:1px solid var(--border); text-align:center; background: var(--card); }
     .cal-cell {
-      min-height:96px; padding:0.5rem; border-right:1px solid rgba(255,255,255,0.04);
-      border-bottom:1px solid rgba(255,255,255,0.04); position:relative;
+      min-height:108px; padding:0.45rem; border-right:1px solid var(--border);
+      border-bottom:1px solid var(--border); position:relative; transition: background .15s;
     }
-    .cal-cell.other { background:rgba(255,255,255,0.015); }
-    .cal-cell.today { background:rgba(217,48,37,0.06); }
-    .cal-cell.today .cal-day { color:var(--red); }
-    .cal-day { font-size:0.7rem; color:var(--muted); margin-bottom:0.3rem; }
+    .cal-cell:nth-child(7n) { border-right:none; }
+    .cal-cell:hover { background: rgba(255,255,255,0.02); }
+    .cal-cell.other { background:rgba(0,0,0,0.25); }
+    .cal-cell.other .cal-day { color: #4a4a52; }
+    .cal-day { font-size:0.78rem; font-weight:500; color:var(--muted); margin-bottom:0.35rem; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-variant-numeric: tabular-nums; }
+    .cal-cell.today .cal-day { background: var(--grad); color:#fff; font-weight:700; }
     .cal-job {
-      background:rgba(217,48,37,0.15); border-left:2px solid var(--red);
-      font-size:0.66rem; padding:0.2rem 0.4rem; margin-bottom:3px;
-      cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      background:var(--red-soft); border-left:3px solid var(--red); border-radius:5px;
+      font-size:0.74rem; padding:0.25rem 0.45rem; margin-bottom:4px;
+      cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition: filter .15s;
     }
-    .cal-job.done { background:rgba(46,158,91,0.12); border-left-color:var(--green); }
-    .cal-legend { display:flex; gap:1.2rem; padding:0.8rem 1.4rem; font-size:0.66rem; color:var(--muted); border-top:1px solid var(--border); }
-    .cal-legend span::before { content:''; display:inline-block; width:8px; height:8px; margin-right:5px; background:var(--red); }
+    .cal-job:hover { filter: brightness(1.3); }
+    .cal-job.done { background:rgba(34,197,94,0.12); border-left-color:var(--green); }
+    .cal-legend { display:flex; gap:1.4rem; padding:0.8rem 1.25rem; font-size:0.78rem; color:var(--muted); border-top:1px solid var(--border); }
+    .cal-legend span { display:flex; align-items:center; gap:0.45rem; }
+    .cal-legend span::before { content:''; width:10px; height:10px; border-radius:3px; background:var(--red); }
     .cal-legend .lg-done::before { background:var(--green); }
 
     /* ── MISC ──────────────────────────────── */
     .attention-item {
-      display:flex; align-items:center; gap:1rem; padding:0.7rem 0;
-      border-bottom:1px solid rgba(255,255,255,0.04); cursor:pointer;
+      display:flex; align-items:center; gap:1rem; padding:0.75rem 0.65rem; border-radius: var(--r-sm);
+      border-bottom:1px solid var(--border); cursor:pointer; transition: background .15s;
     }
-    .attention-item:last-child { border:none; }
-    .attention-item:hover { background:rgba(217,48,37,0.05); }
-    .at-days { font-family:'Bebas Neue'; color:var(--red); font-size:1.2rem; min-width:56px; text-align:center; }
-    .at-days small { display:block; font-family:'DM Sans'; font-size:0.55rem; letter-spacing:1px; color:var(--muted); }
+    .attention-item:last-child { border-bottom:none; }
+    .attention-item:hover { background: var(--hover); }
+    .at-days { font-family:'Bebas Neue'; color:var(--red); font-size:1.5rem; line-height:1; min-width:54px; text-align:center; background: var(--red-soft); border-radius: var(--r-sm); padding:0.4rem 0.3rem 0.3rem; }
+    .at-days small { display:block; font-family:'DM Sans'; font-size:0.6rem; font-weight:600; letter-spacing:0.04em; color:#ff8a80; margin-top:2px; }
     .toast {
-      position:fixed; bottom:1.5rem; right:1.5rem; z-index:2000;
-      background:var(--card); border:1px solid var(--green); color:var(--white);
-      padding:0.8rem 1.4rem; font-size:0.84rem; display:none;
-      box-shadow:0 10px 40px rgba(0,0,0,0.6);
+      position:fixed; bottom:1.5rem; right:1.5rem; z-index:2000; max-width: min(420px, calc(100vw - 2rem));
+      background: var(--card-2); border:1px solid var(--border-strong); border-left:3px solid var(--green);
+      border-radius: var(--r); color:var(--white);
+      padding:0.85rem 1.2rem; font-size:0.88rem; font-weight:500;
+      box-shadow: 0 20px 50px -15px rgba(0,0,0,0.8);
+      opacity:0; visibility:hidden; transform: translateY(10px);
+      transition: opacity .2s, transform .25s var(--ease), visibility .2s;
     }
-    .toast.show { display:block; }
-    .addons-list { display:flex; flex-wrap:wrap; gap:0.4rem; }
-    .addons-list span { font-size:0.66rem; border:1px solid var(--border); padding:0.15rem 0.5rem; color:var(--muted); }
-    .checkbox-row { display:flex; align-items:center; gap:0.6rem; font-size:0.84rem; margin-bottom:0.4rem; }
-    .checkbox-row input { width:auto; }
-    .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
-    .danger-zone { border:1px solid rgba(217,48,37,0.4); padding:1.2rem; }
-    .danger-zone h3 { color:var(--red); font-size:1.1rem; margin-bottom:0.6rem; }
-    .hint { font-size:0.75rem; color:var(--muted); line-height:1.6; }
-    kbd { background:var(--card); border:1px solid var(--border); padding:0.1rem 0.4rem; font-size:0.75rem; }
+    .toast.show { opacity:1; visibility:visible; transform:none; }
+    .addons-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.4rem; }
+    .addons-list span { font-size:0.76rem; border:1px solid var(--border-strong); border-radius:999px; padding:0.18rem 0.6rem; color:var(--muted); background: var(--card); }
+    .checkbox-row { display:flex; align-items:center; gap:0.65rem; font-size:0.88rem; padding:0.45rem 0.65rem; margin-bottom:0.35rem; border:1px solid var(--border); border-radius: var(--r-sm); background: var(--card); transition: border-color .15s; }
+    .checkbox-row:hover { border-color: var(--border-strong); }
+    .checkbox-row:has(input:checked) { border-color: rgba(229,55,43,0.5); background: var(--red-soft); }
+    .checkbox-row input { width:18px; }
+    .checkbox-row label { color: var(--white); cursor:pointer; flex:1; font-weight:400; }
+    .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+    .settings-grid .panel { margin-bottom:1.25rem; }
+    .danger-zone { border:1px solid rgba(229,55,43,0.35); border-radius: var(--r); padding:1.25rem; background: rgba(229,55,43,0.04); }
+    .danger-zone h3 { color:#ff8a80; font-size:1.25rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem; }
+    .hint { font-size:0.84rem; color:var(--muted); line-height:1.65; }
+    .hint strong { color: var(--white); font-weight:600; }
+    kbd { background:var(--card-2); border:1px solid var(--border-strong); border-bottom-width:2px; border-radius:5px; padding:0.05rem 0.4rem; font-size:0.78rem; font-family: ui-monospace, monospace; color: var(--white); }
+    pre { border-radius: var(--r-sm); }
+    .steps-list { display:grid; gap:0.5rem; }
 
     /* ── RESPONSIVE ────────────────────────── */
+    @media (max-width: 1100px) {
+      .stats-grid { grid-template-columns:repeat(2,1fr); }
+      .dash-cols { grid-template-columns:1fr; }
+      .dash-cols > .panel:first-child { grid-row:auto; }
+    }
     @media (max-width: 950px) {
       .app-grid { grid-template-columns:1fr; }
-      .sidebar { position:fixed; z-index:900; width:220px; transform:translateX(-100%); transition:transform 0.25s; }
+      .sidebar { position:fixed; z-index:900; width:264px; left:0; top:0; transform:translateX(-100%); transition:transform .28s var(--ease); box-shadow: 20px 0 60px -20px rgba(0,0,0,0.8); }
       .sidebar.open { transform:none; }
-      .menu-toggle { display:block !important; }
-      .main { padding:1.5rem; }
-      .stats-grid { grid-template-columns:repeat(2,1fr); }
+      .sidebar.open ~ .scrim { display:block; position:fixed; inset:0; z-index:850; background: rgba(0,0,0,0.55); backdrop-filter: blur(2px); }
+      .topbar {
+        display:flex; align-items:center; gap:0.75rem; position:sticky; top:0; z-index:800;
+        padding:0.7rem 1rem; background: rgba(9,9,11,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border-bottom:1px solid var(--border);
+      }
+      .topbar .brand-mark { width:30px; height:30px; font-size:0.9rem; border-radius:8px; }
+      .main { padding:1.4rem 1rem 2.5rem; }
       .settings-grid { grid-template-columns:1fr; }
-      .detail-grid { grid-template-columns:1fr; }
+      .page-head h1 { font-size:2rem; }
     }
-    .menu-toggle {
-      display:none; background:var(--card); border:1px solid var(--border);
-      color:var(--white); padding:0.5rem 0.9rem; font-size:0.9rem;
+    @media (max-width: 600px) {
+      .stats-grid { gap:0.7rem; }
+      .stat-card { padding:0.95rem 1rem; }
+      .stat-value { font-size:2.1rem; }
+      .detail-grid { grid-template-columns:1fr; }
+      .cal-cell { min-height:72px; padding:0.25rem; }
+      .cal-job { font-size:0.64rem; padding:0.15rem 0.3rem; }
+      .cal-toolbar h2 { font-size:1.4rem; }
+      .modal-back { padding: 0; align-items:flex-end; }
+      .modal { border-radius: var(--r-lg) var(--r-lg) 0 0; max-height: 94vh; overflow-y:auto; }
+      .toast { left:1rem; right:1rem; bottom:1rem; }
+      .modal-body [style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; gap:0 !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
   </style>
 </head>
 <body>
 
+  <!-- icon sprite (Lucide, MIT) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></symbol>
+      <symbol id="i-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+      <symbol id="i-cal-check" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+      <symbol id="i-dollar" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+      <symbol id="i-trend" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><path d="M12 15V3"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><path d="M12 3v12"/></symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+      <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+    </defs>
+  </svg>
+
   <!-- ══════════ LOGIN ══════════ -->
   <div id="loginScreen">
     <div class="login-box">
+      <div class="brand-mark" aria-hidden="true">PF</div>
       <div class="login-logo"><em>PREMIUM</em> FINISH</div>
-      <div class="login-sub">CRM · Admin Access</div>
+      <div class="login-sub">CRM · Admin access</div>
       <div class="field">
         <label for="pwInput">Password</label>
-        <input type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()" />
+        <input type="password" id="pwInput" placeholder="Enter password" autocomplete="current-password" autofocus onkeydown="if(event.key==='Enter')tryLogin()" />
       </div>
-      <button class="btn full" onclick="tryLogin()">ENTER CRM</button>
-      <div class="login-error" id="loginError">Wrong password — try again</div>
-      <p class="hint" style="margin-top:1.4rem;">Default password: <kbd>detail2025</kbd><br>Change it in Settings.</p>
+      <button class="btn full" onclick="tryLogin()">Enter CRM <svg class="i sm"><use href="#i-arrow"/></svg></button>
+      <div class="login-error" id="loginError" role="alert">Wrong password — try again</div>
+      <p class="hint">Default password: <kbd>detail2025</kbd><br>Change it in Settings.</p>
     </div>
   </div>
 
@@ -329,34 +483,42 @@
 
       <!-- SIDEBAR -->
       <aside class="sidebar" id="sidebar">
-        <div class="side-logo"><em>PREMIUM</em> FINISH</div>
-        <div class="side-sub">CRM Dashboard</div>
+        <div class="side-brand">
+          <div class="brand-mark" aria-hidden="true">PF</div>
+          <div><div class="side-logo"><em>PREMIUM</em> FINISH</div><div class="side-sub">CRM Dashboard</div></div>
+        </div>
+        <div class="nav-label">Workspace</div>
         <button class="nav-item active" data-view="dashboard" onclick="showView('dashboard')">
-          <span class="ni-icon">◧</span> Dashboard
+          <svg class="i"><use href="#i-dashboard"/></svg> Dashboard
         </button>
         <button class="nav-item" data-view="leads" onclick="showView('leads')">
-          <span class="ni-icon">✉</span> Leads
+          <svg class="i"><use href="#i-inbox"/></svg> Leads
           <span class="nav-badge" id="leadBadge" style="display:none">0</span>
         </button>
         <button class="nav-item" data-view="customers" onclick="showView('customers')">
-          <span class="ni-icon">☰</span> Customers
+          <svg class="i"><use href="#i-users"/></svg> Customers
         </button>
         <button class="nav-item" data-view="calendar" onclick="showView('calendar')">
-          <span class="ni-icon">▤</span> Calendar
+          <svg class="i"><use href="#i-calendar"/></svg> Calendar
         </button>
+        <div class="nav-label" style="margin-top:0.8rem;">System</div>
         <button class="nav-item" data-view="settings" onclick="showView('settings')">
-          <span class="ni-icon">⚙</span> Settings
+          <svg class="i"><use href="#i-settings"/></svg> Settings
         </button>
         <div class="side-bottom">
-          <button class="btn-ghost" onclick="logout()">LOCK CRM</button>
+          <button class="btn-ghost" onclick="logout()"><svg class="i sm"><use href="#i-lock"/></svg> Lock CRM</button>
         </div>
       </aside>
+      <div class="scrim" onclick="document.getElementById('sidebar').classList.remove('open')"></div>
 
       <!-- MAIN -->
-      <main class="main">
-        <div style="margin-bottom:1rem;">
-          <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ MENU</button>
+      <div>
+        <div class="topbar">
+          <button class="btn-ghost icon-btn" aria-label="Open menu" onclick="document.getElementById('sidebar').classList.add('open')"><svg class="i"><use href="#i-menu"/></svg></button>
+          <div class="brand-mark" aria-hidden="true">PF</div>
+          <div class="side-logo"><em>PREMIUM</em> FINISH</div>
         </div>
+      <main class="main">
 
         <!-- ── DASHBOARD ── -->
         <section id="view-dashboard">
@@ -366,41 +528,43 @@
               <div class="sub" id="todayLabel"></div>
             </div>
             <div class="head-actions">
-              <button class="btn" onclick="openLeadModal()">+ ADD LEAD</button>
+              <button class="btn" onclick="openLeadModal()"><svg class="i sm"><use href="#i-plus"/></svg> Add Lead</button>
             </div>
           </div>
 
           <div class="stats-grid" id="statsGrid"></div>
 
-          <div class="panel">
-            <div class="panel-head"><span>⚠ NEEDS ATTENTION</span><span class="t-muted" style="font-family:'DM Sans';font-size:0.68rem;letter-spacing:1px;">leads waiting too long</span></div>
-            <div class="panel-body" id="attentionList"></div>
-          </div>
+          <div class="dash-cols">
+            <div class="panel">
+              <div class="panel-head"><span><svg class="i"><use href="#i-alert"/></svg> Needs attention</span><span class="ph-note">leads waiting 2+ days</span></div>
+              <div class="panel-body list" id="attentionList"></div>
+            </div>
 
-          <div class="panel">
-            <div class="panel-head"><span>◤ RECENT LEADS</span></div>
-            <div class="panel-body" id="recentLeads" style="padding:0.4rem 1.4rem;"></div>
-          </div>
+            <div class="panel">
+              <div class="panel-head"><span><svg class="i"><use href="#i-inbox"/></svg> Recent leads</span><button class="btn-ghost" style="min-height:32px;padding:0.3rem 0.7rem;font-size:0.72rem;" onclick="showView('leads')">View all</button></div>
+              <div class="panel-body list" id="recentLeads"></div>
+            </div>
 
-          <div class="panel">
-            <div class="panel-head"><span>◆ UPCOMING JOBS</span></div>
-            <div class="panel-body" id="upcomingJobs" style="padding:0.4rem 1.4rem;"></div>
+            <div class="panel">
+              <div class="panel-head"><span><svg class="i"><use href="#i-cal-check"/></svg> Upcoming jobs</span><button class="btn-ghost" style="min-height:32px;padding:0.3rem 0.7rem;font-size:0.72rem;" onclick="showView('calendar')">Calendar</button></div>
+              <div class="panel-body list" id="upcomingJobs"></div>
+            </div>
           </div>
         </section>
 
         <!-- ── LEADS ── -->
         <section id="view-leads" style="display:none;">
           <div class="page-head">
-            <div><h1>LEADS</h1><div class="sub">every request, tracked to the finish</div></div>
-            <div class="head-actions"><button class="btn" onclick="openLeadModal()">+ ADD LEAD</button></div>
+            <div><h1>LEADS</h1><div class="sub">Every request, tracked to the finish</div></div>
+            <div class="head-actions"><button class="btn" onclick="openLeadModal()"><svg class="i sm"><use href="#i-plus"/></svg> Add Lead</button></div>
           </div>
           <div class="chips" id="leadChips"></div>
           <div class="panel">
-            <div class="panel-body" style="padding:0; overflow-x:auto;">
+            <div style="overflow-x:auto;">
               <table>
                 <thead><tr>
                   <th>Name</th><th>Contact</th><th>Service</th><th>Value</th>
-                  <th>Age</th><th>Stage</th><th></th>
+                  <th>Age</th><th>Stage</th><th><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Actions</span></th>
                 </tr></thead>
                 <tbody id="leadsTable"></tbody>
               </table>
@@ -412,10 +576,10 @@
         <section id="view-customers" style="display:none;">
           <div class="page-head">
             <div><h1>CUSTOMERS</h1><div class="sub" id="custSub">your book of business</div></div>
-            <div class="head-actions"><button class="btn-ghost" onclick="openCustomerModal()">+ ADD CUSTOMER</button></div>
+            <div class="head-actions"><button class="btn-ghost" onclick="openCustomerModal()"><svg class="i sm"><use href="#i-user-plus"/></svg> Add Customer</button></div>
           </div>
           <div class="panel">
-            <div class="panel-body" style="padding:0; overflow-x:auto;">
+            <div style="overflow-x:auto;">
               <table>
                 <thead><tr>
                   <th>Name</th><th>Phone</th><th>Email</th><th>Jobs</th><th>Lifetime Value</th><th>Last Job</th>
@@ -429,19 +593,19 @@
         <!-- ── CALENDAR ── -->
         <section id="view-calendar" style="display:none;">
           <div class="page-head">
-            <div><h1>CALENDAR</h1><div class="sub">scheduled & completed jobs</div></div>
-            <div class="head-actions"><button class="btn" onclick="openJobModal()">+ SCHEDULE JOB</button></div>
+            <div><h1>CALENDAR</h1><div class="sub">Scheduled &amp; completed jobs</div></div>
+            <div class="head-actions"><button class="btn" onclick="openJobModal()"><svg class="i sm"><use href="#i-plus"/></svg> Schedule Job</button></div>
           </div>
           <div class="cal-grid-wrap">
             <div class="cal-toolbar">
               <h2 id="calTitle"></h2>
               <div class="cal-nav">
-                <button onclick="calMove(-1)">← PREV</button>
-                <button onclick="calToday()">TODAY</button>
-                <button onclick="calMove(1)">NEXT →</button>
+                <button onclick="calMove(-1)" aria-label="Previous month"><svg class="i sm"><use href="#i-left"/></svg> Prev</button>
+                <button onclick="calToday()">Today</button>
+                <button onclick="calMove(1)" aria-label="Next month">Next <svg class="i sm"><use href="#i-right"/></svg></button>
               </div>
             </div>
-            <div class="cal-grid" id="calGrid"></div>
+            <div style="overflow-x:auto;"><div class="cal-grid" id="calGrid" style="min-width:340px;"></div></div>
             <div class="cal-legend">
               <span>Scheduled</span>
               <span class="lg-done">Completed</span>
@@ -452,14 +616,14 @@
         <!-- ── SETTINGS ── -->
         <section id="view-settings" style="display:none;">
           <div class="page-head">
-            <div><h1>SETTINGS</h1><div class="sub">backup, security & data</div></div>
+            <div><h1>SETTINGS</h1><div class="sub">Backup, security &amp; data</div></div>
           </div>
 
           <div class="panel">
-            <div class="panel-head"><span>CLOUD SYNC — AUTOMATIC WEBSITE LEADS</span></div>
+            <div class="panel-head"><span><svg class="i"><use href="#i-cloud"/></svg> Cloud sync — automatic website leads</span></div>
             <div class="panel-body">
               <p class="hint" id="cloudStatusTxt" style="margin-bottom:1rem;"><span style="color:var(--muted);">● CHECKING…</span></p>
-              <button class="btn" onclick="openSetupWizard()">⚙ RUN / RE-RUN SETUP WIZARD</button>
+              <button class="btn" onclick="openSetupWizard()"><svg class="i sm"><use href="#i-settings"/></svg> Run / re-run setup wizard</button>
               <p class="hint" style="margin-top:1rem;">
                 One-time free setup (Supabase free tier). After it: website form submissions appear
                 in Leads automatically (~20s), and this CRM syncs across any device you open it on.
@@ -469,13 +633,13 @@
 
           <div class="settings-grid">
             <div class="panel">
-              <div class="panel-head"><span>SECURITY</span></div>
+              <div class="panel-head"><span><svg class="i"><use href="#i-shield"/></svg> Security</span></div>
               <div class="panel-body">
-                <div class="field">
+                <div class="field" style="margin-bottom:0.8rem;">
                   <label for="newPw">Change password</label>
-                  <input type="text" id="newPw" placeholder="new password" />
+                  <input type="text" id="newPw" placeholder="New password" autocomplete="new-password" />
                 </div>
-                <button class="btn" onclick="changePassword()">SAVE PASSWORD</button>
+                <button class="btn" onclick="changePassword()">Save password</button>
                 <p class="hint" style="margin-top:1rem;">
                   This is a light lock for a single-person business — it keeps casual
                   snooping off your data, not hackers off the file. Keep backups safe.
@@ -484,15 +648,15 @@
             </div>
 
             <div class="panel">
-              <div class="panel-head"><span>BACKUP & RESTORE</span></div>
+              <div class="panel-head"><span><svg class="i"><use href="#i-download"/></svg> Backup &amp; restore</span></div>
               <div class="panel-body">
                 <p class="hint" style="margin-bottom:1rem;">
                   Data lives in this browser. Export a backup file regularly
                   (recommended: once a week after a busy weekend).
                 </p>
                 <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                  <button class="btn" onclick="exportData()">⇓ EXPORT BACKUP</button>
-                  <button class="btn-ghost" onclick="document.getElementById('importFile').click()">⇑ IMPORT BACKUP</button>
+                  <button class="btn" onclick="exportData()"><svg class="i sm"><use href="#i-download"/></svg> Export backup</button>
+                  <button class="btn-ghost" onclick="document.getElementById('importFile').click()"><svg class="i sm"><use href="#i-upload"/></svg> Import backup</button>
                   <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
                 </div>
               </div>
@@ -500,20 +664,20 @@
           </div>
 
           <div class="panel">
-            <div class="panel-head"><span>HOW THIS CRM WORKS</span></div>
+            <div class="panel-head"><span><svg class="i"><use href="#i-info"/></svg> How this CRM works</span></div>
             <div class="panel-body hint">
-              <p style="margin-bottom:0.8rem;">
-                • With <strong>Cloud Sync connected</strong>: website requests appear in Leads automatically — nothing to copy.<br>
-                • You also get the Formspree email for every request (your phone-side heads-up).<br>
-                • Move leads through: <span class="stage stage-new">New</span> →
+              <ul style="list-style:none; display:grid; gap:0.55rem; margin-bottom:0.9rem;">
+                <li>• With <strong>Cloud Sync connected</strong>: website requests appear in Leads automatically — nothing to copy.</li>
+                <li>• You also get the Formspree email for every request (your phone-side heads-up).</li>
+                <li>• Move leads through: <span class="stage stage-new">New</span> →
                   <span class="stage stage-contacted">Contacted</span> →
                   <span class="stage stage-scheduled">Scheduled</span> →
-                  <span class="stage stage-won">Won</span> (or Lost).<br>
-                • Scheduling a job puts it on the <strong>Calendar</strong>; marking it
-                  <strong>Completed</strong> counts toward <strong>revenue</strong>.<br>
-                • Leads that sit too long show up under <strong>Needs Attention</strong> on the Dashboard.<br>
-                • Add phone/text callers manually with <kbd>+ Add Lead</kbd> — takes 10 seconds.
-              </p>
+                  <span class="stage stage-won">Won</span> (or Lost).</li>
+                <li>• Scheduling a job puts it on the <strong>Calendar</strong>; marking it
+                  <strong>Completed</strong> counts toward <strong>revenue</strong>.</li>
+                <li>• Leads that sit too long show up under <strong>Needs Attention</strong> on the Dashboard.</li>
+                <li>• Add phone/text callers manually with <kbd>+ Add Lead</kbd> — takes 10 seconds.</li>
+              </ul>
               <p>
                 Without Cloud Sync, everything still works — it's just saved in this browser only,
                 and website leads arrive by email only.
@@ -522,10 +686,10 @@
           </div>
 
           <div class="danger-zone">
-            <h3>DANGER ZONE</h3>
+            <h3><svg class="i"><use href="#i-alert"/></svg> DANGER ZONE</h3>
             <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-              <button class="btn-ghost btn-danger" onclick="loadDemo()">LOAD DEMO DATA</button>
-              <button class="btn-ghost btn-danger" onclick="wipeData()">ERASE ALL DATA</button>
+              <button class="btn-ghost btn-danger" onclick="loadDemo()">Load demo data</button>
+              <button class="btn-ghost btn-danger" onclick="wipeData()"><svg class="i sm"><use href="#i-trash"/></svg> Erase all data</button>
             </div>
             <p class="hint" style="margin-top:0.8rem;">
               Demo data shows how the CRM looks with sample leads/customers/jobs — erase it after looking around.
@@ -533,15 +697,16 @@
           </div>
         </section>
       </main>
+      </div>
     </div>
   </div>
 
   <!-- ══════════ MODALS ══════════ -->
   <div class="modal-back" id="modalBack" onclick="if(event.target===this)closeModal()">
-    <div class="modal" id="modalBox"><!-- filled by JS --></div>
+    <div class="modal" id="modalBox" role="dialog" aria-modal="true"><!-- filled by JS --></div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ============================================================
@@ -666,7 +831,7 @@ async function pollWebLeads() {
     db.lastWebLead = rows[rows.length - 1].id;
     saveData(db);
     render();
-    toast('🔥 New lead from your website: ' + (rows[0].payload && rows[0].payload.name || 'Unknown'));
+    toast('New lead from your website: ' + (rows[0].payload && rows[0].payload.name || 'Unknown'));
     // clear imported rows from the inbox (best effort; id-tracking prevents double import anyway)
     const ids = rows.map(r => r.id).join(',');
     sbReq('website_leads?id=in.(' + ids + ')', { method: 'DELETE', prefer: 'return=minimal' }).catch(() => {});
@@ -708,6 +873,7 @@ let db = loadData();
 let uid = () => 'id' + (db.seq++) + '_' + Date.now().toString(36);
 const $  = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ico = (n, c = 'i sm') => `<svg class="${c}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const money = n => '$' + (Number(n)||0).toLocaleString();
 const fmtDate = iso => iso ? new Date(iso+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) : '—';
 const todayISO = () => isoLocal(new Date());
@@ -804,6 +970,7 @@ function openModal(html) {
   $('#modalBack').classList.add('open');
 }
 function closeModal() { $('#modalBack').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 /* ============================================================
    DASHBOARD
@@ -822,16 +989,16 @@ function renderDashboard() {
   const wonRate    = db.leads.length ? Math.round(db.leads.filter(l => l.stage === 'won').length / db.leads.length * 100) : 0;
 
   $('#statsGrid').innerHTML = `
-    <div class="stat-card"><div class="stat-label">New Leads</div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">New Leads</div><div class="stat-ico red">${ico('inbox','i')}</div></div>
       <div class="stat-value ${newLeads ? 'red':''}">${newLeads}</div>
       <div class="stat-note">${openLeads} open in pipeline</div></div>
-    <div class="stat-card"><div class="stat-label">Scheduled Jobs</div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Scheduled Jobs</div><div class="stat-ico blue">${ico('calendar','i')}</div></div>
       <div class="stat-value">${scheduled}</div>
       <div class="stat-note">on the calendar</div></div>
-    <div class="stat-card"><div class="stat-label">Revenue — This Month</div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Revenue — This Month</div><div class="stat-ico green">${ico('dollar','i')}</div></div>
       <div class="stat-value green">${money(revMonth)}</div>
       <div class="stat-note">${monthDone.length} jobs completed</div></div>
-    <div class="stat-card"><div class="stat-label">Lead → Won Rate</div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Lead → Won Rate</div><div class="stat-ico amber">${ico('trend','i')}</div></div>
       <div class="stat-value">${wonRate}%</div>
       <div class="stat-note">requests turned into customers</div></div>`;
 
@@ -847,8 +1014,8 @@ function renderDashboard() {
         <div>${esc(l.name)} <span class="stage stage-${l.stage}" style="margin-left:0.5rem;">${STAGE_LABEL[l.stage]}</span></div>
         <div class="t-muted" style="font-size:0.74rem;">${esc(l.service)} · ${esc(l.phone)}</div>
       </div>
-      <button class="btn-ghost" onclick="event.stopPropagation(); quickCall('${esc(l.phone)}')">CALL</button>
-    </div>`).join('') : '<div class="empty-note">Nothing stuck — every lead has been touched recently ✔</div>';
+      <button class="btn-ghost" onclick="event.stopPropagation(); quickCall('${esc(l.phone)}')">${ico('phone')} Call</button>
+    </div>`).join('') : '<div class="empty-note">Nothing stuck — every lead has been touched recently.</div>';
 
   const recent = [...db.leads].sort((a,b) => b.createdAt - a.createdAt).slice(0,5);
   $('#recentLeads').innerHTML = recent.length ? recent.map(l => `
@@ -902,7 +1069,7 @@ function renderLeads() {
           ${STAGES.map(s => `<option value="${s}" ${l.stage===s?'selected':''}>${STAGE_LABEL[s]}</option>`).join('')}
         </select>
       </td>
-      <td><button class="btn-ghost btn-danger" style="padding:0.3rem 0.6rem;" onclick="event.stopPropagation();deleteLead('${l.id}')">✕</button></td>
+      <td><button class="btn-ghost btn-danger icon-btn" aria-label="Delete lead" title="Delete lead" onclick="event.stopPropagation();deleteLead('${l.id}')">${ico('trash')}</button></td>
     </tr>`).join('')
   : `<tr><td colspan="7"><div class="empty-note">No leads in this view.</div></td></tr>`;
 }
@@ -932,7 +1099,7 @@ function openLeadModal() {
     <div class="checkbox-row"><input type="checkbox" id="la_${btoa(a).replace(/[^a-z0-9]/gi,'')}" value="${esc(a)}"
       onchange="toggleLA(this)"><label for="la_${btoa(a).replace(/[^a-z0-9]/gi,'')}" style="margin:0;text-transform:none;letter-spacing:0;">${esc(a)} <span class="t-muted">(+${ADDONS[a]})</span></label></div>`).join('');
   openModal(`
-    <div class="modal-head"><h2>ADD LEAD</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><h2>ADD LEAD</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
     <div class="modal-body">
       <div class="field"><label>Full Name *</label><input id="lf_name" placeholder="Jane Smith"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
@@ -969,7 +1136,7 @@ function openLeadDetail(id) {
   const l = db.leads.find(x => x.id === id); if (!l) return;
   const jobs = db.jobs.filter(j => j.leadId === id);
   openModal(`
-    <div class="modal-head"><h2>${esc(l.name)}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><h2>${esc(l.name)}</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
     <div class="modal-body">
       <div class="detail-grid">
         <div class="detail-item"><div class="d-label">Phone</div>
@@ -994,8 +1161,8 @@ function openLeadDetail(id) {
     </div>
     <div class="modal-foot">
       <button class="btn-ghost btn-danger" onclick="deleteLead('${l.id}')">DELETE</button>
-      <button class="btn-ghost" onclick="convertLead('${l.id}')">＋ CONVERT TO CUSTOMER</button>
-      ${l.stage !== 'scheduled' ? `<button class="btn" onclick="stageAndSchedule('${l.id}')">→ SCHEDULE JOB</button>` : ''}
+      <button class="btn-ghost" onclick="convertLead('${l.id}')">${ico('user-plus')} CONVERT TO CUSTOMER</button>
+      ${l.stage !== 'scheduled' ? `<button class="btn" onclick="stageAndSchedule('${l.id}')">${ico('calendar')} SCHEDULE JOB</button>` : ''}
     </div>`);
 }
 function stageAndSchedule(id) {
@@ -1046,7 +1213,7 @@ function openCustDetail(id) {
   const jobs = db.jobs.filter(j => j.customerId === id).sort((a,b) => b.date.localeCompare(a.date));
   const ltv = jobs.filter(j => j.status === 'completed').reduce((s,j) => s + jobPrice(j), 0);
   openModal(`
-    <div class="modal-head"><h2>${esc(c.name)}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><h2>${esc(c.name)}</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
     <div class="modal-body">
       <div class="detail-grid">
         <div class="detail-item"><div class="d-label">Phone</div>
@@ -1069,7 +1236,7 @@ function openCustDetail(id) {
         </li>`).join('')}</ul>` : '<div class="empty-note">No jobs yet.</div>'}
     </div>
     <div class="modal-foot">
-      <button class="btn-ghost" onclick="openJobModal('${c.id}')">＋ SCHEDULE JOB</button>
+      <button class="btn-ghost" onclick="openJobModal('${c.id}')">${ico('calendar')} SCHEDULE JOB</button>
     </div>`);
 }
 function saveCustNotes(id) {
@@ -1077,7 +1244,7 @@ function saveCustNotes(id) {
 }
 function openCustomerModal() {
   openModal(`
-    <div class="modal-head"><h2>ADD CUSTOMER</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><h2>ADD CUSTOMER</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
     <div class="modal-body">
       <div class="field"><label>Full Name *</label><input id="cf_name" placeholder="Jane Smith"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
@@ -1117,7 +1284,7 @@ function renderCalendar() {
     const jobs = db.jobs.filter(j => j.date === iso);
     const isToday = iso === today;
     html += `<div class="cal-cell ${d.getMonth()!==calM?'other':''} ${isToday?'today':''}">
-      <div class="cal-day">${d.getDate()}${isToday?' ·TODAY':''}</div>
+      <div class="cal-day">${d.getDate()}</div>
       ${jobs.map(j => {
         const c = custById(j.customerId);
         return `<div class="cal-job ${j.status==='completed'?'done':''}" onclick="openJobDetail('${j.id}')" title="${esc(c?c.name:'')} — ${esc(j.service)}">
@@ -1139,7 +1306,7 @@ function openJobModal(customerId) {
       <label for="ja${i}" style="margin:0;text-transform:none;letter-spacing:0;">${esc(a)} <span class="t-muted">(+${ADDONS[a]})</span></label></div>`).join('');
   jobAddons = [];
   openModal(`
-    <div class="modal-head"><h2>SCHEDULE JOB</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><h2>SCHEDULE JOB</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
     <div class="modal-body">
       <div class="field"><label>Customer *</label><select id="jf_cust"><option value="">— choose customer —</option>${custs}</select></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
@@ -1169,7 +1336,7 @@ function openJobDetail(id) {
   const j = db.jobs.find(x => x.id === id); if (!j) return;
   const c = custById(j.customerId);
   openModal(`
-    <div class="modal-head"><h2>JOB — ${c ? esc(c.name) : 'Unknown'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><h2>JOB — ${c ? esc(c.name) : 'Unknown'}</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
     <div class="modal-body">
       <div class="detail-grid">
         <div class="detail-item"><div class="d-label">Date</div><div class="d-val">${fmtDate(j.date)}</div></div>
@@ -1192,7 +1359,7 @@ function openJobDetail(id) {
     </div>
     <div class="modal-foot">
       <button class="btn-ghost btn-danger" onclick="deleteJob('${j.id}')">DELETE</button>
-      ${j.status !== 'completed' ? `<button class="btn" onclick="setJobStatus('${j.id}','completed');openJobDetail('${j.id}')">✔ MARK COMPLETED</button>`:''}
+      ${j.status !== 'completed' ? `<button class="btn" onclick="setJobStatus('${j.id}','completed');openJobDetail('${j.id}')">${ico('check')} MARK COMPLETED</button>`:''}
     </div>`);
 }
 function setJobStatus(id, status) {
@@ -1204,7 +1371,7 @@ function setJobStatus(id, status) {
     if (l && !l.customerId) convertLeadSilent(l);
     if (l) l.stage = 'won';
   }
-  saveData(db); closeModal(); render(); toast(status === 'completed' ? 'Job completed — revenue counted 🎉' : 'Job updated');
+  saveData(db); closeModal(); render(); toast(status === 'completed' ? 'Job completed — revenue counted' : 'Job updated');
 }
 function convertLeadSilent(l) {
   let c = db.customers.find(x => x.phone.replace(/[^0-9]/g,'') === l.phone.replace(/[^0-9]/g,''));
@@ -1286,7 +1453,7 @@ create policy "website_leads_public" on website_leads for all to anon using (tru
 
 function openSetupWizard() {
   openModal(`
-    <div class="modal-head"><h2>⚙ AUTOMATIC SETUP — FREE DATABASE</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-head"><h2>AUTOMATIC SETUP — FREE DATABASE</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
     <div class="modal-body" style="max-height:62vh; overflow-y:auto;">
       <p class="hint" style="margin-bottom:1.2rem;">
         Do this <strong>once</strong> (~5 minutes). After it, website requests appear in this CRM
@@ -1306,7 +1473,7 @@ function openSetupWizard() {
         Paste this and click <strong>RUN</strong>:
       </p>
       <pre style="background:var(--card); border:1px solid var(--border); padding:0.8rem; font-size:0.68rem; line-height:1.5; overflow-x:auto; white-space:pre; margin-bottom:0.6rem;">${esc(SETUP_SQL)}</pre>
-      <button class="btn-ghost" onclick="navigator.clipboard.writeText(SETUP_SQL).then(()=>toast('SQL copied — paste it in the Supabase SQL Editor'))" style="margin-bottom:1.2rem;">⧉ COPY SQL</button>
+      <button class="btn-ghost" onclick="navigator.clipboard.writeText(SETUP_SQL).then(()=>toast('SQL copied — paste it in the Supabase SQL Editor'))" style="margin-bottom:1.2rem;">${ico('copy')} COPY SQL</button>
 
       <div class="section-label">STEP 3 — GET YOUR 2 KEYS (1 min)</div>
       <p class="hint" style="margin-bottom:0.8rem;">
@@ -1324,9 +1491,9 @@ function openSetupWizard() {
         (the same one as <kbd>index.html</kbd>), replacing the blank one, then reload this CRM page. Done.
       </p>
       <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-        <button class="btn" onclick="saveConfigFile()">⇓ SAVE CONFIG FILE</button>
-        <button class="btn-ghost" onclick="testConnection()">⚡ TEST CONNECTION</button>
-        <button class="btn-ghost" onclick="openDiagTab()">🔎 OPEN DIAGNOSTIC TAB</button>
+        <button class="btn" onclick="saveConfigFile()">${ico('download')} SAVE CONFIG FILE</button>
+        <button class="btn-ghost" onclick="testConnection()">${ico('zap')} TEST CONNECTION</button>
+        <button class="btn-ghost" onclick="openDiagTab()">${ico('search')} OPEN DIAGNOSTIC TAB</button>
       </div>
       <p class="hint" id="cfgTest" style="margin-top:0.8rem; display:none;"></p>
     </div>
