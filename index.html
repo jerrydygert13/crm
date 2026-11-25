@@ -3,1724 +3,414 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Premium Finish — CRM (Admin)</title>
+  <title>Premium Finish Auto Detailing · Mobile Car Detailing in Syracuse, NY</title>
+  <meta name="description" content="Mobile car detailing that comes to your driveway in Syracuse and the 315 area. Packages from $129, monthly plans from $89, ceramic coating and more. Call or text 315-641-9988." />
+  <meta name="theme-color" content="#070707" />
+  <meta property="og:title" content="Premium Finish Auto Detailing · Mobile Car Detailing in Syracuse, NY" />
+  <meta property="og:description" content="Mobile car detailing that comes to your driveway in Syracuse and the 315 area. Packages from $129, monthly plans from $89, ceramic coating and more. Call or text 315-641-9988." />
+  <meta property="og:image" content="images/AFTER-2.jpg" />
+  <link rel="icon" href="images/logo.png" />
 
-  <!--
-    ============================================================
-    PREMIUM FINISH — FREE CRM
-    ============================================================
-    HOW IT WORKS:
-      • Cloud Sync (free Supabase, one-time setup wizard):
-        website form submissions appear here automatically,
-        and data syncs across any device you open this on.
-      • Not connected yet? Everything still works locally in
-        this browser — run the wizard anytime from Settings.
-      • Default login password:  detail2025
-        → change it in Settings after first login.
-
-    IMPORTANT:
-      • Use Settings → "Export Backup" regularly anyway —
-        it saves a JSON file you can restore anywhere.
-      • Set up once via the wizard on first launch, or skip it
-        (then leads arrive by email only, add them manually).
-    ============================================================
-  -->
-
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
-  <script src="supabase-config.js"></script>
-  <script>
-    /* Fallback connection (same as the website) so the CRM still syncs when
-       supabase-config.js isn't uploaded next to it, e.g. on GitHub Pages.
-       The publishable key is designed to be public. */
-    window.PF_SUPABASE = window.PF_SUPABASE || {
-      url: "https://bhbxybbqcornwjtxwbhz.supabase.co",
-      key: "sb_publishable_dYIHFqm5TT15n6KJ49M3Lg_DRqu4G7p"
-    };
-  </script>
-  <meta name="theme-color" content="#09090b" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <style>
-    :root {
-      color-scheme: dark;
-      /* surfaces */
-      --black:  #09090b;
-      --deep:   #111114;
-      --card:   #17171b;
-      --card-2: #1e1e23;
-      --hover:  rgba(255,255,255,0.045);
-      /* text */
-      --white:  #f4f4f5;
-      --muted:  #a1a1aa;
-      --dim:    #71717a;
-      /* lines */
-      --border: rgba(255,255,255,0.08);
-      --border-strong: rgba(255,255,255,0.14);
-      /* brand + status */
-      --red:    #e5372b;
-      --red-soft: rgba(229,55,43,0.12);
-      --orange: #f06a24;
-      --green:  #22c55e;
-      --amber:  #f5a524;
-      --blue:   #60a5fa;
-      --grad:   linear-gradient(135deg, var(--red), var(--orange));
-      /* shape */
-      --r-sm: 8px; --r: 12px; --r-lg: 16px;
-      --shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px -12px rgba(0,0,0,0.6);
-      --ease: cubic-bezier(.2,.8,.2,1);
-    }
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html { -webkit-text-size-adjust:100%; }
-    body {
-      background: var(--black); color: var(--white);
-      font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.9rem; line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-    h1,h2,h3, .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.5px; font-weight: 400; }
-    button { font-family: inherit; cursor: pointer; color: inherit; }
-    a { color: inherit; }
-    .i { width:18px; height:18px; flex-shrink:0; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-    .i.sm { width:15px; height:15px; }
-
-    input, select, textarea {
-      font-family: inherit; font-size: 0.9rem;
-      background: var(--card); border: 1px solid var(--border-strong); border-radius: var(--r-sm);
-      color: var(--white); padding: 0.65rem 0.85rem; width: 100%;
-      transition: border-color .15s, box-shadow .15s, background .15s;
-    }
-    input::placeholder, textarea::placeholder { color: var(--dim); }
-    input:hover, select:hover, textarea:hover { border-color: rgba(255,255,255,0.22); }
-    input:focus, select:focus, textarea:focus { outline:none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(229,55,43,0.22); }
-    select { appearance:none; padding-right:2.2rem; cursor:pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat:no-repeat; background-position: right 0.8rem center; }
-    input[type=checkbox] { width:18px; height:18px; accent-color: var(--red); cursor:pointer; padding:0; }
-    input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor:pointer; }
-    label { font-size:0.78rem; font-weight:500; color:var(--muted); display:block; margin-bottom:0.4rem; }
-    :focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
-    ::selection { background: rgba(229,55,43,0.35); }
-    ::-webkit-scrollbar { width:10px; height:10px; }
-    ::-webkit-scrollbar-thumb { background:#2a2a30; border-radius:10px; border:2px solid var(--black); }
-    ::-webkit-scrollbar-track { background:transparent; }
-
-    /* ── BUTTONS ───────────────────────────── */
-    .btn, .btn-ghost {
-      display:inline-flex; align-items:center; justify-content:center; gap:0.45rem;
-      font-size:0.8rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
-      border-radius: var(--r-sm); padding:0.62rem 1.1rem; min-height:40px; white-space:nowrap;
-      transition: background .18s var(--ease), border-color .18s, color .18s, transform .1s, box-shadow .18s;
-    }
-    .btn { background: var(--grad); color:#fff; border:none;
-      box-shadow: 0 6px 18px -8px rgba(229,55,43,0.7), inset 0 1px 0 rgba(255,255,255,0.18); }
-    .btn:hover { filter: brightness(1.08); box-shadow: 0 8px 22px -8px rgba(240,106,36,0.8), inset 0 1px 0 rgba(255,255,255,0.2); }
-    .btn:active, .btn-ghost:active { transform: translateY(1px); }
-    .btn.full { width:100%; }
-    .btn-ghost { background: var(--card); border:1px solid var(--border-strong); color: var(--white); }
-    .btn-ghost:hover { background: var(--card-2); border-color: rgba(255,255,255,0.24); }
-    .btn-danger { color:#ff8a80; border-color: rgba(229,55,43,0.35); background: rgba(229,55,43,0.06); }
-    .btn-danger:hover { color:#fff; background: rgba(229,55,43,0.18); border-color: var(--red); }
-    .icon-btn { min-height:34px; width:34px; padding:0; }
-    .login-error { color:#ff8a80; font-size:0.82rem; margin-top:0.9rem; display:none; }
-
-    /* ── LOGIN ─────────────────────────────── */
-    #loginScreen {
-      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1rem;
-      background:
-        radial-gradient(600px 400px at 20% 10%, rgba(229,55,43,0.14), transparent 70%),
-        radial-gradient(500px 400px at 85% 90%, rgba(240,106,36,0.10), transparent 70%),
-        var(--black);
-    }
-    .login-box {
-      background: rgba(23,23,27,0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border:1px solid var(--border-strong); border-radius: var(--r-lg);
-      padding: 2.5rem 2.2rem 2rem; width: 100%; max-width: 380px; text-align:center;
-      box-shadow: 0 30px 80px -30px rgba(0,0,0,0.8);
-    }
-    .brand-mark {
-      width:48px; height:48px; border-radius:12px; background: var(--grad);
-      display:inline-flex; align-items:center; justify-content:center;
-      font-family:'Bebas Neue'; font-size:1.4rem; letter-spacing:1px; color:#fff;
-      box-shadow: 0 10px 30px -10px rgba(229,55,43,0.8), inset 0 1px 0 rgba(255,255,255,0.25);
-    }
-    .login-box .brand-mark { margin-bottom:1.1rem; }
-    .login-logo { font-family:'Bebas Neue'; font-size:2rem; letter-spacing:2.5px; line-height:1; }
-    .login-logo em, .side-logo em { color:var(--red); font-style:normal; }
-    .login-sub { font-size:0.82rem; color:var(--muted); margin:0.45rem 0 1.8rem; }
-    .login-box .field { margin-bottom:1rem; text-align:left; }
-    .login-box .hint { margin-top:1.4rem; }
-
-    /* ── APP LAYOUT ────────────────────────── */
-    #app { display:none; min-height:100vh; }
-    .app-grid { display:grid; grid-template-columns: 248px 1fr; min-height:100vh; }
-    .app-grid > div { min-width:0; } /* lets wide tables scroll inside their panel instead of stretching the page */
-
-    .sidebar {
-      background: var(--deep); border-right:1px solid var(--border);
-      padding: 1.2rem 0.85rem; position: sticky; top:0; height:100vh;
-      display:flex; flex-direction:column; gap:0.2rem;
-    }
-    .side-brand { display:flex; align-items:center; gap:0.75rem; padding:0.3rem 0.55rem 1.3rem; }
-    .side-brand .brand-mark { width:36px; height:36px; font-size:1.05rem; border-radius:10px; }
-    .side-logo { font-family:'Bebas Neue'; font-size:1.3rem; letter-spacing:2px; line-height:1; }
-    .side-sub { font-size:0.72rem; color:var(--dim); margin-top:2px; }
-    .nav-label { font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--dim); padding:0.4rem 0.7rem 0.5rem; }
-    .nav-item {
-      display:flex; align-items:center; gap:0.75rem; position:relative;
-      padding: 0.62rem 0.75rem; min-height:42px; color: var(--muted);
-      font-size: 0.88rem; font-weight:500; border-radius: var(--r-sm);
-      background:none; border:none; width:100%; text-align:left;
-      transition: background .15s, color .15s;
-    }
-    .nav-item:hover { color:var(--white); background: var(--hover); }
-    .nav-item.active { color:var(--white); background: var(--red-soft); }
-    .nav-item.active .i { color: var(--red); }
-    .nav-item.active::before { content:''; position:absolute; left:-0.85rem; top:9px; bottom:9px; width:3px; border-radius:0 3px 3px 0; background: var(--grad); }
-    .nav-badge {
-      margin-left:auto; background:var(--red); color:#fff; font-size:0.7rem; font-weight:700;
-      min-width:20px; height:20px; border-radius:10px;
-      display:flex; align-items:center; justify-content:center; padding:0 6px;
-      font-variant-numeric: tabular-nums;
-    }
-    .side-bottom { margin-top:auto; padding-top:1rem; border-top:1px solid var(--border); }
-    .side-bottom .btn-ghost { width:100%; }
-    .scrim { display:none; }
-
-    .topbar { display:none; }
-    .main { padding: 2.2rem 2.5rem 3rem; width:100%; max-width: 1320px; margin: 0 auto; }
-    .page-head { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1.6rem; gap:1rem; flex-wrap:wrap; }
-    .page-head h1 { font-size: 2.4rem; line-height:1; }
-    .page-head .sub { font-size:0.88rem; color:var(--muted); margin-top:0.35rem; }
-    .head-actions { display:flex; gap:0.6rem; flex-wrap:wrap; }
-    section[id^=view-] { animation: fadeUp .3s var(--ease); }
-    @keyframes fadeUp { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform:none; } }
-
-    /* ── STAT CARDS ────────────────────────── */
-    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
-    .stat-card {
-      background: linear-gradient(180deg, var(--card-2), var(--card)); border:1px solid var(--border);
-      border-radius: var(--r); padding:1.15rem 1.25rem 1.1rem; position:relative; overflow:hidden;
-      box-shadow: var(--shadow); transition: border-color .2s, transform .2s var(--ease);
-    }
-    .stat-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
-    .stat-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; }
-    .stat-ico { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; background: var(--hover); color: var(--muted); }
-    .stat-ico.red   { background: var(--red-soft); color: var(--red); }
-    .stat-ico.green { background: rgba(34,197,94,0.12); color: var(--green); }
-    .stat-ico.blue  { background: rgba(96,165,250,0.12); color: var(--blue); }
-    .stat-ico.amber { background: rgba(245,165,36,0.12); color: var(--amber); }
-    .stat-label { font-size:0.8rem; font-weight:500; color:var(--muted); }
-    .stat-value { font-family:'Bebas Neue'; font-size:2.6rem; line-height:1; letter-spacing:1px; font-variant-numeric: tabular-nums; }
-    .stat-note { font-size:0.78rem; color:var(--dim); margin-top:0.45rem; }
-    .stat-value.red { color:var(--red); }
-    .stat-value.green { color:var(--green); }
-
-    /* ── PANELS ────────────────────────────── */
-    .dash-cols { display:grid; grid-template-columns: 1.15fr 1fr; gap:1.25rem; align-items:start; }
-    .dash-cols > .panel:first-child { grid-row: span 2; }
-    .panel { background:var(--deep); border:1px solid var(--border); border-radius: var(--r); margin-bottom:1.25rem; overflow:hidden; box-shadow: var(--shadow); }
-    .dash-cols .panel { margin-bottom:0; }
-    .panel-head {
-      padding:0.95rem 1.25rem; border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between; gap:0.8rem;
-      font-size:0.95rem; font-weight:600;
-    }
-    .panel-head > span:first-child { display:flex; align-items:center; gap:0.6rem; }
-    .panel-head .i { color: var(--muted); }
-    .panel-head .ph-note { font-size:0.78rem; font-weight:400; color:var(--dim); }
-    .panel-body { padding:1.15rem 1.25rem; }
-    .panel-body.list { padding:0.35rem 0.6rem; }
-    .empty-note { color:var(--dim); font-size:0.86rem; padding:1.6rem 0.5rem; text-align:center; }
-
-    /* ── TABLES ────────────────────────────── */
-    table { width:100%; border-collapse:collapse; }
-    th {
-      font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--dim);
-      text-align:left; padding:0.8rem 1rem; border-bottom:1px solid var(--border); background: var(--card); white-space:nowrap;
-    }
-    td { padding:0.85rem 1rem; border-bottom:1px solid var(--border); font-size:0.88rem; vertical-align:middle; }
-    tbody tr:last-child td { border-bottom:none; }
-    tr.rowlink { cursor:pointer; transition:background .15s; }
-    tr.rowlink:hover { background: var(--hover); }
-    .t-muted { color:var(--muted); }
-    .t-money { font-family:'Bebas Neue'; font-size:1.15rem; letter-spacing:0.5px; font-variant-numeric: tabular-nums; }
-    .t-actions { display:flex; gap:0.4rem; }
-
-    /* ── STAGE BADGES ──────────────────────── */
-    .stage {
-      display:inline-flex; align-items:center; gap:0.4rem; font-size:0.72rem; font-weight:600;
-      padding:0.22rem 0.6rem; border:1px solid; border-radius:999px; white-space:nowrap; text-transform:capitalize;
-    }
-    .stage::before { content:''; width:6px; height:6px; border-radius:50%; background: currentColor; }
-    .stage-new        { color:#ff8a4c; border-color:rgba(240,106,36,0.3);  background:rgba(240,106,36,0.1); }
-    .stage-contacted  { color:#f5b94a; border-color:rgba(245,165,36,0.3);  background:rgba(245,165,36,0.1); }
-    .stage-scheduled  { color:#7cb5fb; border-color:rgba(96,165,250,0.3);  background:rgba(96,165,250,0.1); }
-    .stage-won        { color:#4ade80; border-color:rgba(34,197,94,0.3);   background:rgba(34,197,94,0.1); }
-    .stage-lost       { color:#a1a1aa; border-color:rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); }
-
-    /* ── FILTER CHIPS ──────────────────────── */
-    .chips { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.1rem; }
-    .chip {
-      display:inline-flex; align-items:center; gap:0.45rem;
-      background:var(--card); border:1px solid var(--border); color:var(--muted); border-radius:999px;
-      padding:0.45rem 0.95rem; min-height:36px; font-size:0.82rem; font-weight:500;
-      transition: all .15s;
-    }
-    .chip:hover { color:var(--white); border-color: var(--border-strong); }
-    .chip.active { border-color: rgba(229,55,43,0.5); color:var(--white); background: var(--red-soft); }
-    .chip b { font-size:0.7rem; font-weight:700; color:var(--white); background: rgba(255,255,255,0.08); border-radius:999px; padding:0.05rem 0.45rem; font-variant-numeric: tabular-nums; }
-    .chip.active b { background: var(--red); }
-
-    /* ── MODAL ─────────────────────────────── */
-    .modal-back {
-      position:fixed; inset:0; background:rgba(5,5,7,0.7); z-index:1000;
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      display:none; align-items:flex-start; justify-content:center;
-      padding: 6vh 1rem; overflow-y:auto;
-    }
-    .modal-back.open { display:flex; animation: fade .18s ease; }
-    .modal-back.open .modal { animation: pop .24s var(--ease); }
-    @keyframes fade { from { opacity:0; } }
-    @keyframes pop { from { opacity:0; transform: translateY(12px) scale(.985); } }
-    .modal {
-      background:var(--deep); border:1px solid var(--border-strong); border-radius: var(--r-lg);
-      width:100%; max-width:580px; position:relative; overflow:hidden;
-      box-shadow: 0 40px 100px -30px rgba(0,0,0,0.9);
-    }
-    .modal::before { content:''; display:block; height:3px; background: var(--grad); }
-    .modal-head {
-      padding:1.15rem 1.5rem; border-bottom:1px solid var(--border);
-      display:flex; justify-content:space-between; align-items:center; gap:1rem;
-    }
-    .modal-head h2 { font-size:1.6rem; line-height:1.1; }
-    .modal-close {
-      background: var(--card); border:1px solid var(--border-strong); color:var(--muted); border-radius: var(--r-sm);
-      width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-      transition: all .15s;
-    }
-    .modal-close:hover { color:var(--white); background: var(--card-2); }
-    .modal-body { padding:1.4rem 1.5rem; }
-    .modal-body .field { margin-bottom:1rem; }
-    .modal-foot {
-      padding:1rem 1.5rem; border-top:1px solid var(--border); background: rgba(255,255,255,0.015);
-      display:flex; gap:0.6rem; justify-content:flex-end; flex-wrap:wrap;
-    }
-    .modal-foot .btn-danger { margin-right:auto; }
-
-    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:1.2rem; }
-    .detail-item { background: var(--card); border:1px solid var(--border); border-radius: var(--r-sm); padding:0.7rem 0.85rem; }
-    .detail-item .d-label, .d-label { font-size:0.72rem; font-weight:500; color:var(--dim); margin-bottom:0.25rem; }
-    .detail-item .d-val { font-size:0.92rem; word-break: break-word; }
-    .detail-item .d-val a { color:#ff7a6e; text-decoration:none; }
-    .detail-item .d-val a:hover { text-decoration:underline; }
-    .section-label { font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--orange); margin:1.5rem 0 0.75rem; display:flex; align-items:center; gap:0.8rem; }
-    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
-
-    .timeline { list-style:none; }
-    .timeline li { padding:0.6rem 0.3rem; border-bottom:1px solid var(--border); font-size:0.86rem; display:flex; gap:0.8rem; align-items:center; border-radius:6px; }
-    .timeline li:last-child { border:none; }
-    .timeline li[onclick]:hover { background: var(--hover); }
-    .timeline .tl-date { color:var(--muted); font-size:0.78rem; white-space:nowrap; min-width:92px; }
-    .status-select { padding:0.4rem 2rem 0.4rem 0.7rem; font-size:0.82rem; width:auto; min-height:34px; }
-
-    /* ── CALENDAR ──────────────────────────── */
-    .cal-grid-wrap { background:var(--deep); border:1px solid var(--border); border-radius: var(--r); overflow:hidden; box-shadow: var(--shadow); }
-    .cal-toolbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.25rem; border-bottom:1px solid var(--border); flex-wrap:wrap; }
-    .cal-toolbar h2 { font-size:1.7rem; line-height:1; }
-    .cal-nav { display:flex; gap:0.4rem; align-items:center; }
-    .cal-nav button {
-      display:inline-flex; align-items:center; gap:0.3rem; min-height:36px;
-      background:var(--card); border:1px solid var(--border-strong); color:var(--muted); border-radius: var(--r-sm);
-      padding:0.4rem 0.8rem; font-size:0.8rem; font-weight:600; transition: all .15s;
-    }
-    .cal-nav button:hover { color:var(--white); background: var(--card-2); }
-    .cal-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); }
-    .cal-dow { padding:0.65rem 0.6rem; font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--dim); border-bottom:1px solid var(--border); text-align:center; background: var(--card); }
-    .cal-cell {
-      min-height:108px; padding:0.45rem; border-right:1px solid var(--border);
-      border-bottom:1px solid var(--border); position:relative; transition: background .15s;
-    }
-    .cal-cell:nth-child(7n) { border-right:none; }
-    .cal-cell:hover { background: rgba(255,255,255,0.02); }
-    .cal-cell.other { background:rgba(0,0,0,0.25); }
-    .cal-cell.other .cal-day { color: #4a4a52; }
-    .cal-day { font-size:0.78rem; font-weight:500; color:var(--muted); margin-bottom:0.35rem; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-variant-numeric: tabular-nums; }
-    .cal-cell.today .cal-day { background: var(--grad); color:#fff; font-weight:700; }
-    .cal-job {
-      background:var(--red-soft); border-left:3px solid var(--red); border-radius:5px;
-      font-size:0.74rem; padding:0.25rem 0.45rem; margin-bottom:4px;
-      cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition: filter .15s;
-    }
-    .cal-job:hover { filter: brightness(1.3); }
-    .cal-job.done { background:rgba(34,197,94,0.12); border-left-color:var(--green); }
-    .cal-legend { display:flex; gap:1.4rem; padding:0.8rem 1.25rem; font-size:0.78rem; color:var(--muted); border-top:1px solid var(--border); }
-    .cal-legend span { display:flex; align-items:center; gap:0.45rem; }
-    .cal-legend span::before { content:''; width:10px; height:10px; border-radius:3px; background:var(--red); }
-    .cal-legend .lg-done::before { background:var(--green); }
-
-    /* ── MISC ──────────────────────────────── */
-    .attention-item {
-      display:flex; align-items:center; gap:1rem; padding:0.75rem 0.65rem; border-radius: var(--r-sm);
-      border-bottom:1px solid var(--border); cursor:pointer; transition: background .15s;
-    }
-    .attention-item:last-child { border-bottom:none; }
-    .attention-item:hover { background: var(--hover); }
-    .at-days { font-family:'Bebas Neue'; color:var(--red); font-size:1.5rem; line-height:1; min-width:54px; text-align:center; background: var(--red-soft); border-radius: var(--r-sm); padding:0.4rem 0.3rem 0.3rem; }
-    .at-days small { display:block; font-family:'DM Sans'; font-size:0.6rem; font-weight:600; letter-spacing:0.04em; color:#ff8a80; margin-top:2px; }
-    .toast {
-      position:fixed; bottom:1.5rem; right:1.5rem; z-index:2000; max-width: min(420px, calc(100vw - 2rem));
-      background: var(--card-2); border:1px solid var(--border-strong); border-left:3px solid var(--green);
-      border-radius: var(--r); color:var(--white);
-      padding:0.85rem 1.2rem; font-size:0.88rem; font-weight:500;
-      box-shadow: 0 20px 50px -15px rgba(0,0,0,0.8);
-      opacity:0; visibility:hidden; transform: translateY(10px);
-      transition: opacity .2s, transform .25s var(--ease), visibility .2s;
-    }
-    .toast.show { opacity:1; visibility:visible; transform:none; }
-    .addons-list { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.4rem; }
-    .addons-list span { font-size:0.76rem; border:1px solid var(--border-strong); border-radius:999px; padding:0.18rem 0.6rem; color:var(--muted); background: var(--card); }
-    .checkbox-row { display:flex; align-items:center; gap:0.65rem; font-size:0.88rem; padding:0.45rem 0.65rem; margin-bottom:0.35rem; border:1px solid var(--border); border-radius: var(--r-sm); background: var(--card); transition: border-color .15s; }
-    .checkbox-row:hover { border-color: var(--border-strong); }
-    .checkbox-row:has(input:checked) { border-color: rgba(229,55,43,0.5); background: var(--red-soft); }
-    .checkbox-row input { width:18px; }
-    .checkbox-row label { color: var(--white); cursor:pointer; flex:1; font-weight:400; }
-    .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
-    .settings-grid .panel { margin-bottom:1.25rem; }
-    .danger-zone { border:1px solid rgba(229,55,43,0.35); border-radius: var(--r); padding:1.25rem; background: rgba(229,55,43,0.04); }
-    .danger-zone h3 { color:#ff8a80; font-size:1.25rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem; }
-    .hint { font-size:0.84rem; color:var(--muted); line-height:1.65; }
-    .hint strong { color: var(--white); font-weight:600; }
-    kbd { background:var(--card-2); border:1px solid var(--border-strong); border-bottom-width:2px; border-radius:5px; padding:0.05rem 0.4rem; font-size:0.78rem; font-family: ui-monospace, monospace; color: var(--white); }
-    pre { border-radius: var(--r-sm); }
-    .steps-list { display:grid; gap:0.5rem; }
-
-    /* ── DATE REQUESTS ─────────────────────── */
-    .req-pill { display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:600; white-space:nowrap;
-      color:#f5b94a; background:rgba(245,165,36,0.1); border:1px solid rgba(245,165,36,0.3); border-radius:999px; padding:0.2rem 0.6rem; }
-    .req-pill.ok { color:#7cb5fb; background:rgba(96,165,250,0.1); border-color:rgba(96,165,250,0.3); }
-    .req-pill.past { color:#ff8a80; background:rgba(229,55,43,0.1); border-color:rgba(229,55,43,0.3); }
-    .req-date { min-width:54px; text-align:center; border-radius:var(--r-sm); padding:0.35rem 0.3rem; background:rgba(245,165,36,0.12); color:#f5b94a; }
-    .req-date b { display:block; font-family:'Bebas Neue'; font-size:1.6rem; font-weight:400; line-height:1; }
-    .req-date small { font-size:0.62rem; font-weight:700; letter-spacing:0.06em; }
-    .req-date.past { background:var(--red-soft); color:#ff8a80; }
-    .req-actions { display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:flex-end; }
-    .req-actions .btn, .req-actions .btn-ghost { min-height:36px; padding:0.4rem 0.8rem; font-size:0.74rem; }
-    .req-box { border:1px solid rgba(245,165,36,0.35); background:rgba(245,165,36,0.06); border-radius:var(--r); padding:1rem; margin-bottom:1.2rem; }
-    .req-box.ok { border-color:rgba(96,165,250,0.35); background:rgba(96,165,250,0.06); }
-    .req-box-head { display:flex; align-items:center; gap:0.5rem; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#f5b94a; }
-    .req-box.ok .req-box-head { color:#7cb5fb; }
-    .req-when { font-family:'Bebas Neue'; font-size:1.6rem; letter-spacing:1px; margin:0.3rem 0 0.8rem; }
-    .req-row { display:flex; gap:0.6rem; align-items:flex-end; flex-wrap:wrap; }
-    .req-row .field { flex:1; min-width:160px; margin:0 !important; }
-    .req-contact { display:flex; gap:0.4rem; flex-wrap:wrap; align-items:center; margin-top:0.9rem; padding-top:0.9rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--muted); }
-    .req-contact a { text-decoration:none; min-height:36px; padding:0.4rem 0.8rem; font-size:0.74rem; }
-    .cal-job.req { background:rgba(245,165,36,0.1); border-left:3px dashed var(--amber); color:#f5d08a; }
-    .cal-legend .lg-req::before { background:var(--amber); }
-
-    /* ── RESPONSIVE ────────────────────────── */
-    @media (max-width: 1100px) {
-      .stats-grid { grid-template-columns:repeat(2,1fr); }
-      .dash-cols { grid-template-columns:1fr; }
-      .dash-cols > .panel:first-child { grid-row:auto; }
-    }
-    @media (max-width: 950px) {
-      .app-grid { grid-template-columns:1fr; }
-      .sidebar { position:fixed; z-index:900; width:264px; left:0; top:0; transform:translateX(-100%); transition:transform .28s var(--ease); box-shadow: 20px 0 60px -20px rgba(0,0,0,0.8); }
-      .sidebar.open { transform:none; }
-      .sidebar.open ~ .scrim { display:block; position:fixed; inset:0; z-index:850; background: rgba(0,0,0,0.55); backdrop-filter: blur(2px); }
-      .topbar {
-        display:flex; align-items:center; gap:0.75rem; position:sticky; top:0; z-index:800;
-        padding:0.7rem 1rem; background: rgba(9,9,11,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-bottom:1px solid var(--border);
-      }
-      .topbar .brand-mark { width:30px; height:30px; font-size:0.9rem; border-radius:8px; }
-      .main { padding:1.4rem 1rem 2.5rem; }
-      .settings-grid { grid-template-columns:1fr; }
-      .page-head h1 { font-size:2rem; }
-    }
-    @media (max-width: 600px) {
-      .stats-grid { gap:0.7rem; }
-      .stat-card { padding:0.95rem 1rem; }
-      .stat-value { font-size:2.1rem; }
-      .detail-grid { grid-template-columns:1fr; }
-      .cal-cell { min-height:72px; padding:0.25rem; }
-      .cal-job { font-size:0.64rem; padding:0.15rem 0.3rem; }
-      .cal-toolbar h2 { font-size:1.4rem; }
-      .modal-back { padding: 0; align-items:flex-end; }
-      .modal { border-radius: var(--r-lg) var(--r-lg) 0 0; max-height: 94vh; overflow-y:auto; }
-      .toast { left:1rem; right:1rem; bottom:1rem; }
-      .modal-body [style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; gap:0 !important; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css?v=202611202057" />
 </head>
 <body>
 
-  <!-- icon sprite (Lucide, MIT) -->
+  <!-- SVG icon sprite -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-      <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></symbol>
-      <symbol id="i-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
-      <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
-      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
-      <symbol id="i-cal-check" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></symbol>
-      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></symbol>
-      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
-      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
-      <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/></symbol>
-      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
-      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
-      <symbol id="i-dollar" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
-      <symbol id="i-trend" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol>
-      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
-      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-      <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
-      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
-      <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><path d="M12 15V3"/></symbol>
-      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><path d="M12 3v12"/></symbol>
-      <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
-      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
-      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
-      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
-      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-      <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
-      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
-      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
-      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
-      <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
-    </defs>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.2a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5h.5a8.5 8.5 0 0 1 8 8z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7l5.7 5.7a8 8 0 1 1-11.4 0z"/></symbol>
+    <symbol id="i-seat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h6a2 2 0 0 1 2 2l-1 9H8L6 5a2 2 0 0 1 1-2z"/><path d="M5 14h13a1 1 0 0 1 1 1v2H6a1 1 0 0 1-1-1zM8 17v4M17 17v4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.9L22 9.3l-5.7 4.6L18.2 21 12 17l-6.2 4 1.9-7.1L2 9.3l7.4-.4z"/></symbol>
+    <symbol id="i-drag" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></symbol>
+    <symbol id="i-vac" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h8M7 21v-6a4 4 0 0 1 4-4h2a4 4 0 0 0 4-4V3"/><path d="M14 3h6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-insta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.9v3h2.6V21z"/></symbol>
+    <symbol id="i-google" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.2-2.7l-3.5-2.7c-1 .7-2.2 1-3.7 1-2.8 0-5.2-1.9-6.1-4.5H2.3v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.9 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.3a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.3 7.1l3.6 2.8C6.8 7.3 9.2 5.4 12 5.4z"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M3 13l2-5a2 2 0 0 1 2-1h10a2 2 0 0 1 2 1l2 5v4H3z"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></symbol>
+    <symbol id="i-engine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h2V7h4V5h4v2h3l2 3h1v6h-1l-2 3H8l-2-3H4z"/></symbol>
   </svg>
 
-  <!-- ══════════ LOGIN ══════════ -->
-  <div id="loginScreen">
-    <div class="login-box">
-      <div class="brand-mark" aria-hidden="true">PF</div>
-      <div class="login-logo"><em>PREMIUM</em> FINISH</div>
-      <div class="login-sub">CRM · Admin access</div>
-      <div class="field">
-        <label for="pwInput">Password</label>
-        <input type="password" id="pwInput" placeholder="Enter password" autocomplete="current-password" autofocus onkeydown="if(event.key==='Enter')tryLogin()" />
+  <!-- ============================================================
+       NAV — same on every page. If you change it, change it in all 4 pages.
+  ============================================================ -->
+  <nav class="top" id="topNav">
+    <div class="wrap nav-inner">
+      <a href="index.html" class="logo" aria-label="Premium Finish Auto Detailing — home">
+        <img src="images/logo.png" alt="Premium Finish Auto Detailing"
+             onerror="this.style.display='none'; document.getElementById('logoText').style.display='block'">
+        <span class="logo-text grad-text" id="logoText">PREMIUM FINISH</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="services.html">Services</a></li>
+        <li><a href="services.html#plans">Plans</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="gallery.html#reviews">Reviews</a></li>
+        <li><a href="services.html#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a class="nav-ig" href="https://www.instagram.com/premiumfinishcny/" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-insta"/></svg></a>
+        <a class="nav-ig" href="https://www.facebook.com/premiumfinishautodetailing" target="_blank" rel="noopener" aria-label="Facebook"><svg><use href="#i-fb"/></svg></a>
+        <a class="nav-phone" href="tel:+13156419988"><svg><use href="#i-phone"/></svg>315-641-9988</a>
+        <a class="btn btn-primary" href="book.html">Book a Detail</a>
+        <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
-      <button class="btn full" onclick="tryLogin()">Enter CRM <svg class="i sm"><use href="#i-arrow"/></svg></button>
-      <div class="login-error" id="loginError" role="alert">Wrong password — try again</div>
-      <p class="hint">Default password: <kbd>detail2025</kbd><br>Change it in Settings.</p>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="services.html#plans">Plans</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="gallery.html#reviews">Reviews</a>
+      <a href="services.html#faq">FAQ</a>
+      <a class="btn btn-primary" href="book.html">Book a Detail</a>
+    </div>
+  </nav>
+
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <header class="hero" id="top">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow in d1"><span class="live-dot"></span>Serving Syracuse &amp; the 315 area</span>
+        <h1 class="h-display in d2">
+          <span class="ln">Showroom</span>
+          <span class="ln grad-text">Finish.</span>
+          <span class="ln">Your Driveway.</span>
+        </h1>
+        <p class="hero-sub in d3">Professional auto detailing, delivered to your driveway. Your house, your work, your apartment — we bring the detail shop to you.</p>
+        <div class="hero-ctas in d4">
+          <a href="book.html" class="btn btn-primary">Book your detail <svg class="btn-arrow"><use href="#i-arrow"/></svg></a>
+          <a href="services.html" class="btn btn-ghost">See packages &amp; pricing</a>
+        </div>
+        <ul class="hero-points in d5">
+          <li><svg><use href="#i-pin"/></svg>Fully mobile</li>
+          <li><svg><use href="#i-drop"/></svg>Hand wash only</li>
+          <li><svg><use href="#i-check"/></svg>Upfront starting prices</li>
+        </ul>
+      </div>
+
+      <div class="hero-visual in d3">
+        <img class="hero-car" src="images/logo4.png" alt="Dark sports car with glowing headlights" />
+        <div class="hero-floor"></div>
+        <a class="hero-badge" href="gallery.html#reviews">
+          <svg class="badge-g"><use href="#i-google"/></svg>
+          <div><small>Google rating</small><strong>5.0 ★★★★★ · 10 reviews</strong></div>
+        </a>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- MARQUEE -->
+  <div class="strip" aria-hidden="true">
+    <div class="strip-track">
+      <div class="strip-item">
+        <span>Express Detail</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Executive Detail</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Premium Finish</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Engine Bay Cleaning</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Trim Restoration</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Headlight Restoration</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Monthly Plans</span><svg class="star"><use href="#i-star"/></svg>
+        <span>We Come To You</span><svg class="star"><use href="#i-star"/></svg>
+      </div>
+      <div class="strip-item">
+        <span>Express Detail</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Executive Detail</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Premium Finish</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Engine Bay Cleaning</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Trim Restoration</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Headlight Restoration</span><svg class="star"><use href="#i-star"/></svg>
+        <span>Monthly Plans</span><svg class="star"><use href="#i-star"/></svg>
+        <span>We Come To You</span><svg class="star"><use href="#i-star"/></svg>
+      </div>
     </div>
   </div>
 
-  <!-- ══════════ APP ══════════ -->
-  <div id="app">
-    <div class="app-grid">
 
-      <!-- SIDEBAR -->
-      <aside class="sidebar" id="sidebar">
-        <div class="side-brand">
-          <div class="brand-mark" aria-hidden="true">PF</div>
-          <div><div class="side-logo"><em>PREMIUM</em> FINISH</div><div class="side-sub">CRM Dashboard</div></div>
+  <!-- ============================================================
+       INSTAGRAM
+  ============================================================ -->
+  <section id="instagram">
+    <div class="wrap">
+      <div class="ig-head r">
+        <a class="ig-profile" href="https://www.instagram.com/premiumfinishcny/" target="_blank" rel="noopener">
+          <span class="ig-avatar"><img src="images/logo.png" alt=""></span>
+          <span>
+            <strong>@premiumfinishcny</strong>
+            <span>Premium Finish · Mobile detailing · Syracuse, NY</span>
+          </span>
+        </a>
+        <div class="ig-actions">
+          <a class="ig-follow" href="https://www.instagram.com/premiumfinishcny/" target="_blank" rel="noopener"><svg><use href="#i-insta"/></svg>Follow</a>
+          <a class="ig-gallery" href="gallery.html">Full gallery →</a>
         </div>
-        <div class="nav-label">Workspace</div>
-        <button class="nav-item active" data-view="dashboard" onclick="showView('dashboard')">
-          <svg class="i"><use href="#i-dashboard"/></svg> Dashboard
-        </button>
-        <button class="nav-item" data-view="leads" onclick="showView('leads')">
-          <svg class="i"><use href="#i-inbox"/></svg> Leads
-          <span class="nav-badge" id="leadBadge" style="display:none">0</span>
-        </button>
-        <button class="nav-item" data-view="customers" onclick="showView('customers')">
-          <svg class="i"><use href="#i-users"/></svg> Customers
-        </button>
-        <button class="nav-item" data-view="calendar" onclick="showView('calendar')">
-          <svg class="i"><use href="#i-calendar"/></svg> Calendar
-        </button>
-        <div class="nav-label" style="margin-top:0.8rem;">System</div>
-        <button class="nav-item" data-view="settings" onclick="showView('settings')">
-          <svg class="i"><use href="#i-settings"/></svg> Settings
-        </button>
-        <div class="side-bottom">
-          <button class="btn-ghost" onclick="logout()"><svg class="i sm"><use href="#i-lock"/></svg> Lock CRM</button>
-        </div>
-      </aside>
-      <div class="scrim" onclick="document.getElementById('sidebar').classList.remove('open')"></div>
+      </div>
+      <!-- Photo strip. To change a photo, replace images/instagram/ig-1.jpg … ig-6.jpg
+           (square photos look best). -->
+      <div class="ig-strip r r2">
+        <a class="ig-tile" href="https://www.instagram.com/reel/DaRtE7xsFdI/" target="_blank" rel="noopener">
+          <img src="images/instagram/ig-1.jpg" alt="Red Camaro ZL1 after a full Premium Finish detail" loading="lazy">
+          <span class="ig-hover"><svg><use href="#i-insta"/></svg></span>
+        </a>
+        <a class="ig-tile" href="https://www.instagram.com/reel/DaeITM7pt04/" target="_blank" rel="noopener">
+          <img src="images/instagram/ig-2.jpg" alt="White Maserati after a full inside and out detail" loading="lazy">
+          <span class="ig-hover"><svg><use href="#i-insta"/></svg></span>
+        </a>
+        <a class="ig-tile" href="https://www.instagram.com/p/DdJ_2R9FGT7/" target="_blank" rel="noopener">
+          <img src="images/instagram/ig-3.jpg" alt="Black Mercedes GL after paint correction and ceramic coating" loading="lazy">
+          <span class="ig-hover"><svg><use href="#i-insta"/></svg></span>
+        </a>
+        <a class="ig-tile" href="https://www.instagram.com/p/DbCAFfjFFFf/" target="_blank" rel="noopener">
+          <img src="images/instagram/ig-4.jpg" alt="BMW X3 red leather interior after detailing" loading="lazy">
+          <span class="ig-hover"><svg><use href="#i-insta"/></svg></span>
+        </a>
+        <a class="ig-tile" href="https://www.instagram.com/p/DabJ4hHlOxm/" target="_blank" rel="noopener">
+          <img src="images/instagram/ig-5.jpg" alt="Black Mini Cooper after clay bar and wax sealant" loading="lazy">
+          <span class="ig-hover"><svg><use href="#i-insta"/></svg></span>
+        </a>
+        <a class="ig-tile" href="https://www.instagram.com/reel/DbEAFNbROWI/" target="_blank" rel="noopener">
+          <img src="images/instagram/ig-6.jpg" alt="Jeep after 2-step paint correction and 10-year ceramic coating" loading="lazy">
+          <span class="ig-hover"><svg><use href="#i-insta"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-      <!-- MAIN -->
+  <!-- PACKAGES (brief) — full details live on services.html -->
+  <section id="home-packages">
+    <div class="wrap">
+      <div class="s-head center">
+        <span class="eyebrow r">Packages</span>
+        <h2 class="h-display s-title r">Three details.<br><span class="grad-text">Zero shortcuts.</span></h2>
+        <p class="s-lead r r2">Straightforward pricing by vehicle size. Every package starts with a careful hand wash.</p>
+      </div>
+      <div class="pkg-grid">
+        <a class="pkg r" href="services.html">
+          <span class="pkg-kicker">Quick &amp; thorough</span>
+          <h3 class="h-display">Express Detail</h3>
+          <p>A quick, detailed clean inside and out — wipe-down, vacuum, windows, hand wash and wheels.</p>
+          <div class="pkg-prices"><span><strong>$129</strong>sedan</span><span><strong>$159</strong>SUV / truck</span></div>
+        </a>
+        <a class="pkg featured r r2" href="services.html">
+          <span class="svc-tag">Most Popular</span>
+          <span class="pkg-kicker">Deeper clean &amp; protection</span>
+          <h3 class="h-display">Executive Detail</h3>
+          <p>Everything in Express plus shampoo, stain and pet hair removal, steam, leather conditioning and wax sealant.</p>
+          <div class="pkg-prices"><span><strong>$229</strong>sedan</span><span><strong>$259</strong>SUV / truck</span></div>
+        </a>
+        <a class="pkg r r3" href="services.html">
+          <span class="pkg-kicker">Full restoration</span>
+          <h3 class="h-display">Premium Finish</h3>
+          <p>The complete reset — heavy stains, deep shampoo, full steam, clay bar and UV protection on every plastic.</p>
+          <div class="pkg-prices"><span><strong>$349</strong>sedan</span><span><strong>$379</strong>SUV / truck</span></div>
+        </a>
+      </div>
+      <div class="pkg-foot r">
+        <span>Also: <a href="services.html#plans">monthly maintenance plans from $89/mo</a></span>
+        <a class="btn btn-ghost" href="services.html">Full package details &amp; add-ons <svg class="btn-arrow"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FEATURE: maintenance plans -->
+  <section id="home-feature">
+    <div class="wrap feature">
+      <div class="feature-media r">
+        <figure><img src="images/work/feature-DbCAFfjFFFf-4.jpg" alt="BMW X3 red leather interior after detailing" loading="lazy"></figure>
+        <figure><img src="images/work/feature-DdJ_2R9FGT7-2.jpg" alt="Black Mercedes GL with ceramic-coated paint" loading="lazy"></figure>
+      </div>
       <div>
-        <div class="topbar">
-          <button class="btn-ghost icon-btn" aria-label="Open menu" onclick="document.getElementById('sidebar').classList.add('open')"><svg class="i"><use href="#i-menu"/></svg></button>
-          <div class="brand-mark" aria-hidden="true">PF</div>
-          <div class="side-logo"><em>PREMIUM</em> FINISH</div>
+        <span class="eyebrow r">Maintenance plans</span>
+        <h2 class="h-display s-title r">Clean all year.<br><span class="grad-text">One monthly price.</span></h2>
+        <p class="s-lead r r2">Regular detailing protects your investment, keeps its value, and makes every drive feel like the first. Monthly plans, cancel anytime.</p>
+        <ul class="feature-list">
+          <li class="r"><span class="fi"><svg><use href="#i-check"/></svg></span><div><strong>Basic — $89/month</strong><span>Interior wipe-down, exterior wash, wheels, windows and a deep vacuum.</span></div></li>
+          <li class="r r2"><span class="fi"><svg><use href="#i-shield"/></svg></span><div><strong>Premium — $119/month</strong><span>Full interior &amp; exterior detail, leather conditioning, wax sealant and UV protection.</span></div></li>
+        </ul>
+        <div class="hero-ctas r">
+          <a href="services.html#plans" class="btn btn-primary">See the plans <svg class="btn-arrow"><use href="#i-arrow"/></svg></a>
+          <a href="sms:+13156419988" class="btn btn-ghost"><svg><use href="#i-msg"/></svg>Text to enroll</a>
         </div>
-      <main class="main">
-
-        <!-- ── DASHBOARD ── -->
-        <section id="view-dashboard">
-          <div class="page-head">
-            <div>
-              <h1>DASHBOARD</h1>
-              <div class="sub" id="todayLabel"></div>
-            </div>
-            <div class="head-actions">
-              <button class="btn" onclick="openLeadModal()"><svg class="i sm"><use href="#i-plus"/></svg> Add Lead</button>
-            </div>
-          </div>
-
-          <div class="stats-grid" id="statsGrid"></div>
-
-          <div class="panel">
-            <div class="panel-head"><span><svg class="i"><use href="#i-calendar"/></svg> Date requests</span><span class="ph-note">customers waiting for you to confirm</span></div>
-            <div class="panel-body list" id="dateRequests"></div>
-          </div>
-
-          <div class="dash-cols">
-            <div class="panel">
-              <div class="panel-head"><span><svg class="i"><use href="#i-alert"/></svg> Needs attention</span><span class="ph-note">leads waiting 2+ days</span></div>
-              <div class="panel-body list" id="attentionList"></div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-head"><span><svg class="i"><use href="#i-inbox"/></svg> Recent leads</span><button class="btn-ghost" style="min-height:32px;padding:0.3rem 0.7rem;font-size:0.72rem;" onclick="showView('leads')">View all</button></div>
-              <div class="panel-body list" id="recentLeads"></div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-head"><span><svg class="i"><use href="#i-cal-check"/></svg> Upcoming jobs</span><button class="btn-ghost" style="min-height:32px;padding:0.3rem 0.7rem;font-size:0.72rem;" onclick="showView('calendar')">Calendar</button></div>
-              <div class="panel-body list" id="upcomingJobs"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── LEADS ── -->
-        <section id="view-leads" style="display:none;">
-          <div class="page-head">
-            <div><h1>LEADS</h1><div class="sub">Every request, tracked to the finish</div></div>
-            <div class="head-actions"><button class="btn" onclick="openLeadModal()"><svg class="i sm"><use href="#i-plus"/></svg> Add Lead</button></div>
-          </div>
-          <div class="chips" id="leadChips"></div>
-          <div class="panel">
-            <div style="overflow-x:auto;">
-              <table>
-                <thead><tr>
-                  <th>Name</th><th>Contact</th><th>Service</th><th>Requested</th><th>Value</th>
-                  <th>Age</th><th>Stage</th><th><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Actions</span></th>
-                </tr></thead>
-                <tbody id="leadsTable"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── CUSTOMERS ── -->
-        <section id="view-customers" style="display:none;">
-          <div class="page-head">
-            <div><h1>CUSTOMERS</h1><div class="sub" id="custSub">your book of business</div></div>
-            <div class="head-actions"><button class="btn-ghost" onclick="openCustomerModal()"><svg class="i sm"><use href="#i-user-plus"/></svg> Add Customer</button></div>
-          </div>
-          <div class="panel">
-            <div style="overflow-x:auto;">
-              <table>
-                <thead><tr>
-                  <th>Name</th><th>Phone</th><th>Email</th><th>Jobs</th><th>Lifetime Value</th><th>Last Job</th>
-                </tr></thead>
-                <tbody id="custTable"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── CALENDAR ── -->
-        <section id="view-calendar" style="display:none;">
-          <div class="page-head">
-            <div><h1>CALENDAR</h1><div class="sub">Scheduled &amp; completed jobs</div></div>
-            <div class="head-actions"><button class="btn" onclick="openJobModal()"><svg class="i sm"><use href="#i-plus"/></svg> Schedule Job</button></div>
-          </div>
-          <div class="cal-grid-wrap">
-            <div class="cal-toolbar">
-              <h2 id="calTitle"></h2>
-              <div class="cal-nav">
-                <button onclick="calMove(-1)" aria-label="Previous month"><svg class="i sm"><use href="#i-left"/></svg> Prev</button>
-                <button onclick="calToday()">Today</button>
-                <button onclick="calMove(1)" aria-label="Next month">Next <svg class="i sm"><use href="#i-right"/></svg></button>
-              </div>
-            </div>
-            <div style="overflow-x:auto;"><div class="cal-grid" id="calGrid" style="min-width:340px;"></div></div>
-            <div class="cal-legend">
-              <span>Scheduled</span>
-              <span class="lg-done">Completed</span>
-              <span class="lg-req">Requested (not confirmed)</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- ── SETTINGS ── -->
-        <section id="view-settings" style="display:none;">
-          <div class="page-head">
-            <div><h1>SETTINGS</h1><div class="sub">Backup, security &amp; data</div></div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-head"><span><svg class="i"><use href="#i-cloud"/></svg> Cloud sync — automatic website leads</span></div>
-            <div class="panel-body">
-              <p class="hint" id="cloudStatusTxt" style="margin-bottom:1rem;"><span style="color:var(--muted);">● CHECKING…</span></p>
-              <button class="btn" onclick="openSetupWizard()"><svg class="i sm"><use href="#i-settings"/></svg> Run / re-run setup wizard</button>
-              <p class="hint" style="margin-top:1rem;">
-                One-time free setup (Supabase free tier). After it: website form submissions appear
-                in Leads automatically (~20s), and this CRM syncs across any device you open it on.
-              </p>
-            </div>
-          </div>
-
-          <div class="settings-grid">
-            <div class="panel">
-              <div class="panel-head"><span><svg class="i"><use href="#i-shield"/></svg> Security</span></div>
-              <div class="panel-body">
-                <div class="field" style="margin-bottom:0.8rem;">
-                  <label for="newPw">Change password</label>
-                  <input type="text" id="newPw" placeholder="New password" autocomplete="new-password" />
-                </div>
-                <button class="btn" onclick="changePassword()">Save password</button>
-                <p class="hint" style="margin-top:1rem;">
-                  This is a light lock for a single-person business — it keeps casual
-                  snooping off your data, not hackers off the file. Keep backups safe.
-                </p>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-head"><span><svg class="i"><use href="#i-download"/></svg> Backup &amp; restore</span></div>
-              <div class="panel-body">
-                <p class="hint" style="margin-bottom:1rem;">
-                  Data lives in this browser. Export a backup file regularly
-                  (recommended: once a week after a busy weekend).
-                </p>
-                <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                  <button class="btn" onclick="exportData()"><svg class="i sm"><use href="#i-download"/></svg> Export backup</button>
-                  <button class="btn-ghost" onclick="document.getElementById('importFile').click()"><svg class="i sm"><use href="#i-upload"/></svg> Import backup</button>
-                  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-head"><span><svg class="i"><use href="#i-info"/></svg> How this CRM works</span></div>
-            <div class="panel-body hint">
-              <ul style="list-style:none; display:grid; gap:0.55rem; margin-bottom:0.9rem;">
-                <li>• With <strong>Cloud Sync connected</strong>: website requests appear in Leads automatically — nothing to copy.</li>
-                <li>• You also get the Formspree email for every request (your phone-side heads-up).</li>
-                <li>• Move leads through: <span class="stage stage-new">New</span> →
-                  <span class="stage stage-contacted">Contacted</span> →
-                  <span class="stage stage-scheduled">Scheduled</span> →
-                  <span class="stage stage-won">Won</span> (or Lost).</li>
-                <li>• Scheduling a job puts it on the <strong>Calendar</strong>; marking it
-                  <strong>Completed</strong> counts toward <strong>revenue</strong>.</li>
-                <li>• Leads that sit too long show up under <strong>Needs Attention</strong> on the Dashboard.</li>
-                <li>• Add phone/text callers manually with <kbd>+ Add Lead</kbd> — takes 10 seconds.</li>
-              </ul>
-              <p>
-                Without Cloud Sync, everything still works — it's just saved in this browser only,
-                and website leads arrive by email only.
-              </p>
-            </div>
-          </div>
-
-          <div class="danger-zone">
-            <h3><svg class="i"><use href="#i-alert"/></svg> DANGER ZONE</h3>
-            <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-              <button class="btn-ghost btn-danger" onclick="loadDemo()">Load demo data</button>
-              <button class="btn-ghost btn-danger" onclick="wipeData()"><svg class="i sm"><use href="#i-trash"/></svg> Erase all data</button>
-            </div>
-            <p class="hint" style="margin-top:0.8rem;">
-              Demo data shows how the CRM looks with sample leads/customers/jobs — erase it after looking around.
-            </p>
-          </div>
-        </section>
-      </main>
       </div>
     </div>
+  </section>
+
+
+  <!-- HOW IT WORKS -->
+  <section id="process">
+    <div class="wrap">
+      <div class="s-head center">
+        <span class="eyebrow r">How it works</span>
+        <h2 class="h-display s-title r">Simple. Mobile.<br><span class="grad-text">Done right.</span></h2>
+      </div>
+      <div class="steps steps-3">
+        <div class="step r"><div class="step-n">01</div><h3>Book in under a minute</h3><p>Pick a package online, or just text us a photo of your vehicle for a quote.</p></div>
+        <div class="step r r2"><div class="step-n">02</div><h3>We come to you</h3><p>Home, work or apartment — we arrive with everything needed to do the job.</p></div>
+        <div class="step r r3"><div class="step-n">03</div><h3>Walk out to a new car</h3><p>Step back into a car that looks and feels like the day you got it.</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- REVIEWS (short) — full list lives on gallery.html -->
+  <section id="home-reviews">
+    <div class="wrap">
+      <div class="s-head split">
+        <div>
+          <span class="eyebrow r">Reviews</span>
+          <h2 class="h-display s-title r">Five stars.<br><span class="grad-text">Every single one.</span></h2>
+        </div>
+        <a class="rating-link r r2" href="https://www.google.com/maps/place/?q=place_id:ChIJMW43I-AZ2WYRtVZ7ajFmMa0" target="_blank" rel="noopener">
+          <svg class="badge-g"><use href="#i-google"/></svg>
+          <span><strong>5.0 ★★★★★</strong><small>10 Google reviews →</small></span>
+        </a>
+      </div>
+      <div class="home-reviews-grid">
+        <figure class="review r">
+          <div class="rv-stars" aria-label="5 out of 5 stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></div>
+          <blockquote>“Jerry detailed our truck today, we had reached out to him kinda last minute &amp; he made it work! Cleaned it inside and out, it looks like new! Needless to say did a phenomenal job and got into detail! Super friendly and sweet as well! Would highly recommend him (:”</blockquote>
+          <figcaption><span class="rv-avatar">L</span><span><strong>Liz S.</strong><small>Google review · Truck</small></span></figcaption>
+        </figure>
+        <figure class="review r r3">
+          <div class="rv-stars" aria-label="5 out of 5 stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></div>
+          <blockquote>“I got the full Premium Finish on my car and absolutely LOVED it! He took amazing care of my car and left it spotless and protected for the future. If anyone needs their car detailed, make sure they book with Premium Finish Auto Detailing to get that Premium Finish on their car!”</blockquote>
+          <figcaption><span class="rv-avatar">R</span><span><strong>Robert B.</strong><small>Google review</small></span></figcaption>
+        </figure>
+        <figure class="review r">
+          <div class="rv-stars" aria-label="5 out of 5 stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></div>
+          <blockquote>“Jerry was great. Job was well done and prices are just right. Excellent work ethic. I will use his services again and again.”</blockquote>
+          <figcaption><span class="rv-avatar">J</span><span><strong>John H.</strong><small>Google review</small></span></figcaption>
+        </figure>
+      </div>
+      <p class="more-link r"><a href="gallery.html#reviews">Read all reviews →</a></p>
+    </div>
+  </section>
+
+
+  <!-- BEYOND THE WASH -->
+  <section id="beyond">
+    <div class="wrap">
+      <div class="s-head split">
+        <div>
+          <span class="eyebrow r">Beyond the wash</span>
+          <h2 class="h-display s-title r">Protection &amp;<br><span class="grad-text">restoration.</span></h2>
+          <p class="s-lead r r2">Central New York winters, road salt and summer sun are hard on a car. These treatments keep it protected between details.</p>
+        </div>
+        <a class="btn btn-ghost r r2" href="services.html#addons">Explore all services <svg class="btn-arrow"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="beyond-grid">
+        <div class="beyond r"><span class="svc-icon"><svg><use href="#i-shield"/></svg></span><h3>Ceramic Coating &amp; Paint Correction</h3><p>Machine polishing that removes swirls, sealed with a long-lasting ceramic coating. Priced after a quick look at your paint.</p><a href="sms:+13156419988">Text for an estimate →</a></div>
+        <div class="beyond r r2"><span class="svc-icon"><svg><use href="#i-bulb"/></svg></span><h3>Headlight Restoration</h3><p>Cloudy, yellowed headlights cleared up for a sharper look and better night visibility.</p><strong>+$100</strong></div>
+        <div class="beyond r r3"><span class="svc-icon"><svg><use href="#i-spark"/></svg></span><h3>Clay Bar &amp; Paint Decon</h3><p>Pulls embedded grime out of the clear coat and leaves the paint glass-smooth.</p><strong>+$50</strong></div>
+        <div class="beyond r r4"><span class="svc-icon"><svg><use href="#i-engine"/></svg></span><h3>Engine Bay &amp; Trim</h3><p>Engine bay cleaning and faded trim restored to a deep, even black.</p><strong>+$50 each</strong></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- WHY PREMIUM FINISH -->
+  <section id="why">
+    <div class="wrap why">
+      <div>
+        <span class="eyebrow r">Why Premium Finish</span>
+        <h2 class="h-display s-title r">Every detail<br><span class="grad-text">matters.</span></h2>
+        <p class="s-lead r r2">We're a local detailer, not a franchise. Every car gets a careful hand wash and slow, careful work on every surface — from daily drivers to weekend cars.</p>
+      </div>
+      <div class="stats">
+        <div class="stat r"><strong class="h-display">100%</strong><span>mobile — we come to you</span></div>
+        <div class="stat r r2"><strong class="h-display">5.0★</strong><span>10 Google reviews, all five stars</span></div>
+        <div class="stat r r3"><strong class="h-display">Hand</strong><span>wash only — no automated brushes</span></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER — same on every page.
+  ============================================================ -->
+  <footer>
+    <div class="wrap">
+      <div class="cta-band r">
+        <div>
+          <h2 class="h-display">Your driveway.<br><span class="grad-text">Our detail.</span></h2>
+          <p>Book online in under a minute, or text us a photo of your vehicle for a quick quote.</p>
+        </div>
+        <div class="hero-ctas">
+          <a href="book.html" class="btn btn-primary">Book your detail <svg class="btn-arrow"><use href="#i-arrow"/></svg></a>
+          <a href="sms:+13156419988" class="btn btn-ghost"><svg><use href="#i-msg"/></svg>Text 315-641-9988</a>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div>
+          <img src="images/logo.png" alt="Premium Finish Auto Detailing">
+          <p>Mobile auto detailing in Syracuse &amp; the 315 area. We come to you — your house, work, or apartment.</p>
+          <div class="foot-social">
+            <a href="https://www.instagram.com/premiumfinishcny/" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-insta"/></svg></a>
+            <a href="https://www.facebook.com/premiumfinishautodetailing" target="_blank" rel="noopener" aria-label="Facebook"><svg><use href="#i-fb"/></svg></a>
+            <a href="https://www.google.com/maps/place/?q=place_id:ChIJMW43I-AZ2WYRtVZ7ajFmMa0" target="_blank" rel="noopener" aria-label="Google reviews"><svg><use href="#i-google"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="services.html">Packages &amp; Pricing</a></li>
+            <li><a href="services.html#plans">Maintenance Plans</a></li>
+            <li><a href="services.html#addons">Add-ons</a></li>
+            <li><a href="gallery.html">Before &amp; After</a></li>
+            <li><a href="gallery.html#reviews">Reviews</a></li>
+            <li><a href="services.html#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+13156419988">Call 315-641-9988</a></li>
+            <li><a href="sms:+13156419988">Text 315-641-9988</a></li>
+            <li><a href="mailto:Premiumfinishcny@gmail.com">Premiumfinishcny@gmail.com</a></li>
+            <li><a href="https://www.instagram.com/premiumfinishcny/" target="_blank" rel="noopener">Instagram @premiumfinishcny</a></li>
+            <li><a href="https://www.facebook.com/premiumfinishautodetailing" target="_blank" rel="noopener">Facebook</a></li>
+            <li><a href="book.html">Request an appointment</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="f-copy">
+        <span>© <span id="yr">2026</span> Premium Finish Auto Detailing. All rights reserved.</span>
+        <span>Premium Finish, Driven by Perfection</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- sticky mobile actions -->
+  <div class="mobile-bar" id="mobileBar">
+    <a class="btn btn-ghost" href="tel:+13156419988"><svg><use href="#i-phone"/></svg>Call</a>
+    <a class="btn btn-ghost" href="sms:+13156419988"><svg><use href="#i-msg"/></svg>Text</a>
+    <a class="btn btn-primary" href="book.html">Book</a>
   </div>
 
-  <!-- ══════════ MODALS ══════════ -->
-  <div class="modal-back" id="modalBack" onclick="if(event.target===this)closeModal()">
-    <div class="modal" id="modalBox" role="dialog" aria-modal="true"><!-- filled by JS --></div>
-  </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/main.js?v=202611202057"></script>
 
-<script>
-/* ============================================================
-   STORAGE — hybrid local + free cloud (Supabase)
-
-   • NOT configured yet → works 100% locally in this browser
-     (exactly like before).
-   • Configured → all data syncs to your free Supabase database:
-       - Website form submissions appear here automatically
-       - CRM edits sync across any device you open this on
-   Data shape is one JSON snapshot in a `crm_state` row, plus an
-   append-only `website_leads` table the website inserts into.
-   The setup wizard (Settings) creates both in one click-copy.
-============================================================ */
-const DATA_KEY  = 'pf_crm_v1';
-const PW_KEY    = 'pf_crm_pw';
-
-/* ---- Supabase helpers ---- */
-const sbConfig = () => window.PF_SUPABASE || { url:'', key:'' };
-const cloudOn  = () => !!(sbConfig().url && sbConfig().key);
-let cloudReady = false;   // becomes true after initial sync succeeds
-let cloudPushTm = null;   // debounce timer
-
-function sbHeaders(extra) {
-  const h = {
-    'apikey': sbConfig().key,
-    'Content-Type': 'application/json'
-  };
-  // Only legacy JWT keys (ey…) can go in Authorization. New publishable
-  // keys (sb_publishable_…) must ONLY use the apikey header.
-  if (/^eyJ/.test(sbConfig().key)) h['Authorization'] = 'Bearer ' + sbConfig().key;
-  return Object.assign(h, extra || {});
-}
-async function sbReq(path, opts = {}) {
-  const res = await fetch(sbConfig().url.replace(/\/$/, '') + '/rest/v1/' + path, {
-    method: opts.method || 'GET',
-    headers: sbHeaders(opts.prefer ? { 'Prefer': opts.prefer } : null),
-    body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined
-  });
-  if (!res.ok) throw new Error('Supabase ' + res.status + ' on ' + path);
-  const txt = await res.text();
-  return txt ? JSON.parse(txt) : null;
-}
-
-function setCloudStatus(state) {
-  const el = document.getElementById('cloudStatusTxt');
-  if (!el) return;
-  if (state === 'live') {
-    el.innerHTML = '<span style="color:var(--green);">● LIVE</span> — website leads arrive automatically · syncing across devices';
-  } else if (state === 'connecting') {
-    el.innerHTML = '<span style="color:var(--amber);">● CONNECTING…</span>';
-  } else if (state === 'error') {
-    el.innerHTML = '<span style="color:var(--red);">● CONNECTION ERROR</span> — check your URL/key in supabase-config.js · data is still saved locally';
-  } else {
-    el.innerHTML = '<span style="color:var(--muted);">● NOT CONNECTED</span> — run the setup wizard below to go automatic';
-  }
-}
-
-function loadData() {
-  try { return JSON.parse(localStorage.getItem(DATA_KEY)) || blank(); }
-  catch { return blank(); }
-}
-function blank() { return { leads:[], customers:[], jobs:[], seq:1, lastWebLead:0, updatedAt:0 }; }
-function saveData(d) {
-  d.updatedAt = Date.now();
-  localStorage.setItem(DATA_KEY, JSON.stringify(d));
-  if (cloudReady && cloudOn()) {
-    clearTimeout(cloudPushTm);
-    cloudPushTm = setTimeout(cloudPush, 900);
-  }
-}
-
-/* ---- cloud sync: one jsonb snapshot row (id=1) ---- */
-async function cloudPush() {
-  try {
-    await sbReq('crm_state', {
-      method: 'POST',
-      prefer: 'resolution=merge-duplicates,return=minimal',
-      body: { id: 1, data: db, updated_at: new Date().toISOString() }
-    });
-    setCloudStatus('live');
-  } catch (e) {
-    console.warn('cloud push failed:', e);
-    setCloudStatus('error');
-  }
-}
-
-/* decide: adopt remote if it's newer, otherwise push local up
-   (this also migrates any existing local data on first connect) */
-async function cloudInitialSync() {
-  const rows = await sbReq('crm_state?id=eq.1');
-  const remote = rows && rows[0] && rows[0].data;
-  if (remote && remote.leads && (remote.updatedAt || 0) > (db.updatedAt || 0)) {
-    db = remote;
-    localStorage.setItem(DATA_KEY, JSON.stringify(db));
-  } else {
-    await cloudPush();
-  }
-}
-
-/* ---- website lead capture: poll the inbox table, import, clear it ---- */
-async function pollWebLeads() {
-  if (!cloudOn()) return;
-  const since = db.lastWebLead || 0;
-  const rows = await sbReq('website_leads?id=gt.' + since + '&order=id.asc');
-  if (rows && rows.length) {
-    rows.forEach(r => {
-      const p = r.payload || {};
-      db.leads.unshift({
-        id: uid(),
-        name:    p.name    || 'Website lead',
-        phone:   p.phone   || '',
-        email:   p.email   || '',
-        address: p.address || '',
-        service: p.service || '',
-        addons:  Array.isArray(p.addons) ? p.addons : [],
-        notes:   p.notes   || '',
-        preferredDate: /^\d{4}-\d{2}-\d{2}$/.test(p.preferredDate || '') ? p.preferredDate : '',
-        preferredTime: String(p.preferredTime || '').slice(0, 40),
-        stage: 'new', customerId: null,
-        createdAt: Date.now(), updatedAt: Date.now()
-      });
-    });
-    db.lastWebLead = rows[rows.length - 1].id;
-    saveData(db);
-    render();
-    toast('New lead from your website: ' + (rows[0].payload && rows[0].payload.name || 'Unknown'));
-    // clear imported rows from the inbox (best effort; id-tracking prevents double import anyway)
-    const ids = rows.map(r => r.id).join(',');
-    sbReq('website_leads?id=in.(' + ids + ')', { method: 'DELETE', prefer: 'return=minimal' }).catch(() => {});
-  }
-}
-
-async function cloudTick() {
-  if (!cloudOn()) return;
-  try {
-    await pollWebLeads();
-    // adopt remote changes (edits made on another device)
-    const rows = await sbReq('crm_state?id=eq.1');
-    const remote = rows && rows[0] && rows[0].data;
-    if (remote && remote.leads && (remote.updatedAt || 0) > (db.updatedAt || 0)) {
-      db = remote;
-      localStorage.setItem(DATA_KEY, JSON.stringify(db));
-      render();
-    }
-    setCloudStatus('live');
-  } catch (e) {
-    console.warn('cloud tick failed:', e);
-    setCloudStatus('error');
-  }
-}
-
-const SERVICES = {
-  'Exterior Wash — Sedan':    60,  'Exterior Wash — SUV/Truck':   70,
-  'Interior Detail — Sedan': 100,  'Interior Detail — SUV/Truck':120,
-  'Full Package — Sedan':    140,  'Full Package — SUV/Truck':    160,
-};
-const ADDONS = {
-  'Pet Hair Removal': 50, 'Clay Bar / Paint Decon': 50,
-  'Protective Wax Sealant': 20, 'Headlight Restoration': 75,
-};
-const STAGES = ['new','contacted','scheduled','won','lost'];
-const STAGE_LABEL = { new:'New', contacted:'Contacted', scheduled:'Scheduled', won:'Won', lost:'Lost' };
-
-let db = loadData();
-let uid = () => 'id' + (db.seq++) + '_' + Date.now().toString(36);
-const $  = s => document.querySelector(s);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const ico = (n, c = 'i sm') => `<svg class="${c}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
-const money = n => '$' + (Number(n)||0).toLocaleString();
-const fmtDate = iso => iso ? new Date(iso+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) : '—';
-const todayISO = () => isoLocal(new Date());
-// timezone-safe YYYY-MM-DD from a local date (avoids UTC off-by-one shifts)
-function isoLocal(d) {
-  return d.getFullYear() + '-' +
-    String(d.getMonth()+1).padStart(2,'0') + '-' +
-    String(d.getDate()).padStart(2,'0');
-}
-const isPending = l => l.preferredDate && ['new','contacted'].includes(l.stage);
-const shortTime = t => t && t !== 'Flexible' ? String(t).split(' (')[0] : (t ? 'Flexible' : '');
-function reqPill(l) {
-  if (l.confirmedDate && l.stage === 'scheduled') return `<span class="req-pill ok">${ico('check')} ${fmtDate(l.confirmedDate)}</span>`;
-  if (!l.preferredDate) return '<span class="t-muted">—</span>';
-  const past = l.preferredDate < todayISO() && isPending(l);
-  return `<span class="req-pill ${past ? 'past' : ''}">${ico('calendar')} ${fmtDate(l.preferredDate)}${shortTime(l.preferredTime) ? ' · ' + esc(shortTime(l.preferredTime)) : ''}</span>`;
-}
-function ageDays(iso) { return Math.floor((Date.now() - new Date(iso)) / 86400000); }
-function svcPrice(name) {
-  if (SERVICES[name] != null) return SERVICES[name];
-  // website leads arrive like "Exterior Wash — SUV/Truck ($70+)" — strip the price tail
-  const base = String(name || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
-  return SERVICES[base] || 0;
-}
-function leadValue(l) {
-  let v = svcPrice(l.service);
-  (l.addons||[]).forEach(a => v += addonPrice(a));
-  return v;
-}
-function addonPrice(a) {
-  if (ADDONS[a] != null) return ADDONS[a];
-  const base = String(a || '').replace(/\s*\(\+?\$?\d+\)\s*$/, '').trim();
-  return ADDONS[base] || 0;
-}
-function jobPrice(j) {
-  if (j.priceOverride != null) return j.priceOverride;
-  let v = svcPrice(j.service);
-  (j.addons||[]).forEach(a => v += addonPrice(a));
-  return v;
-}
-function toast(msg) {
-  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 2600);
-}
-
-/* ============================================================
-   LOGIN  (light client-side lock; password stored hashed)
-============================================================ */
-async function hashPw(pw) {
-  if (window.crypto && crypto.subtle) {
-    try {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('pf::' + pw));
-      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
-    } catch { /* fall through to simple hash */ }
-  }
-  // fallback for non-secure contexts (plain http): simple djb2-style hash
-  let h = 5381;
-  const s = 'pf::' + pw;
-  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
-  return 'djb_' + h.toString(16);
-}
-async function tryLogin() {
-  const pw = $('#pwInput').value;
-  const stored = localStorage.getItem(PW_KEY);
-  if (!stored) localStorage.setItem(PW_KEY, await hashPw('detail2025'));
-  if (await hashPw(pw) === (stored || await hashPw('detail2025'))) {
-    sessionStorage.setItem('pf_crm_unlocked','1');
-    $('#loginScreen').style.display = 'none';
-    $('#app').style.display = 'block';
-    boot();
-  } else {
-    $('#loginError').style.display = 'block';
-    $('#pwInput').value = ''; $('#pwInput').focus();
-  }
-}
-function logout() { sessionStorage.removeItem('pf_crm_unlocked'); location.reload(); }
-async function changePassword() {
-  const v = $('#newPw').value.trim();
-  if (v.length < 4) return toast('Password too short (min 4 chars)');
-  localStorage.setItem(PW_KEY, await hashPw(v));
-  $('#newPw').value = ''; toast('Password updated');
-}
-
-/* ============================================================
-   NAVIGATION
-============================================================ */
-let currentView = 'dashboard';
-function showView(v) {
-  currentView = v;
-  document.querySelectorAll('section[id^=view-]').forEach(s => s.style.display = 'none');
-  $('#view-' + v).style.display = 'block';
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === v));
-  $('#sidebar').classList.remove('open');
-  render();
-}
-
-/* ============================================================
-   MODAL HELPERS
-============================================================ */
-function openModal(html) {
-  $('#modalBox').innerHTML = html;
-  $('#modalBack').classList.add('open');
-}
-function closeModal() { $('#modalBack').classList.remove('open'); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-/* ============================================================
-   DASHBOARD
-============================================================ */
-function renderDashboard() {
-  $('#todayLabel').textContent = new Date().toLocaleDateString('en-US',
-    { weekday:'long', month:'long', day:'numeric', year:'numeric' });
-
-  const newLeads   = db.leads.filter(l => l.stage === 'new').length;
-  const openLeads  = db.leads.filter(l => !['won','lost'].includes(l.stage)).length;
-  const scheduled  = db.jobs.filter(j => j.status === 'scheduled').length;
-  const now = new Date(); const mNow = now.getMonth(), yNow = now.getFullYear();
-  const monthDone  = db.jobs.filter(j => j.status === 'completed' && j.completedAt) 
-                     .filter(j => { const d = new Date(j.completedAt); return d.getMonth()===mNow && d.getFullYear()===yNow; });
-  const revMonth   = monthDone.reduce((s,j) => s + jobPrice(j), 0);
-  const wonRate    = db.leads.length ? Math.round(db.leads.filter(l => l.stage === 'won').length / db.leads.length * 100) : 0;
-
-  $('#statsGrid').innerHTML = `
-    <div class="stat-card"><div class="stat-top"><div class="stat-label">New Leads</div><div class="stat-ico red">${ico('inbox','i')}</div></div>
-      <div class="stat-value ${newLeads ? 'red':''}">${newLeads}</div>
-      <div class="stat-note">${openLeads} open in pipeline</div></div>
-    <div class="stat-card"><div class="stat-top"><div class="stat-label">Scheduled Jobs</div><div class="stat-ico blue">${ico('calendar','i')}</div></div>
-      <div class="stat-value">${scheduled}</div>
-      <div class="stat-note">on the calendar</div></div>
-    <div class="stat-card"><div class="stat-top"><div class="stat-label">Revenue — This Month</div><div class="stat-ico green">${ico('dollar','i')}</div></div>
-      <div class="stat-value green">${money(revMonth)}</div>
-      <div class="stat-note">${monthDone.length} jobs completed</div></div>
-    <div class="stat-card"><div class="stat-top"><div class="stat-label">Lead → Won Rate</div><div class="stat-ico amber">${ico('trend','i')}</div></div>
-      <div class="stat-value">${wonRate}%</div>
-      <div class="stat-note">requests turned into customers</div></div>`;
-
-  // Needs attention: open leads older than 2 days
-  const stale = db.leads
-    .filter(l => ['new','contacted'].includes(l.stage))
-    .filter(l => ageDays(l.createdAt) >= 2)
-    .sort((a,b) => a.createdAt - b.createdAt);
-  $('#attentionList').innerHTML = stale.length ? stale.map(l => `
-    <div class="attention-item" onclick="openLeadDetail('${l.id}')">
-      <div class="at-days">${ageDays(l.createdAt)}<small>DAYS IDLE</small></div>
-      <div style="flex:1;">
-        <div>${esc(l.name)} <span class="stage stage-${l.stage}" style="margin-left:0.5rem;">${STAGE_LABEL[l.stage]}</span></div>
-        <div class="t-muted" style="font-size:0.74rem;">${esc(l.service)} · ${esc(l.phone)}</div>
-      </div>
-      <button class="btn-ghost" onclick="event.stopPropagation(); quickCall('${esc(l.phone)}')">${ico('phone')} Call</button>
-    </div>`).join('') : '<div class="empty-note">Nothing stuck — every lead has been touched recently.</div>';
-
-  const reqs = db.leads.filter(isPending).sort((a,b) => a.preferredDate.localeCompare(b.preferredDate));
-  $('#dateRequests').innerHTML = reqs.length ? reqs.map(l => {
-    const d = new Date(l.preferredDate + 'T00:00:00'), past = l.preferredDate < todayISO();
-    return `<div class="attention-item" onclick="openLeadDetail('${l.id}')">
-      <div class="req-date ${past ? 'past' : ''}"><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-US',{month:'short'}).toUpperCase()}</small></div>
-      <div style="flex:1;min-width:0;">
-        <div>${esc(l.name)} <span class="stage stage-${l.stage}" style="margin-left:0.4rem;">${STAGE_LABEL[l.stage]}</span></div>
-        <div class="t-muted" style="font-size:0.78rem;">${d.toLocaleDateString('en-US',{weekday:'long'})}${shortTime(l.preferredTime) ? ' · ' + esc(shortTime(l.preferredTime)) : ''} · ${esc(l.service)}${past ? ' · <span style="color:#ff8a80;">date passed — pick a new one</span>' : ''}</div>
-      </div>
-      <div class="req-actions">
-        <button class="btn-ghost" onclick="event.stopPropagation();openLeadDetail('${l.id}')">${ico('phone')} Contact</button>
-        ${past ? '' : `<button class="btn" onclick="event.stopPropagation();confirmLead('${l.id}','${l.preferredDate}')">${ico('check')} Confirm</button>`}
-      </div>
-    </div>`; }).join('') : '<div class="empty-note">No date requests waiting — new website bookings show up here.</div>';
-
-  const recent = [...db.leads].sort((a,b) => b.createdAt - a.createdAt).slice(0,5);
-  $('#recentLeads').innerHTML = recent.length ? recent.map(l => `
-    <div class="attention-item" onclick="openLeadDetail('${l.id}')">
-      <div style="min-width:80px;" class="t-muted">${new Date(l.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
-      <div style="flex:1;"><div>${esc(l.name)}</div>
-        <div class="t-muted" style="font-size:0.74rem;">${esc(l.service)}</div></div>
-      <div class="t-money">${money(leadValue(l))}</div>
-      <span class="stage stage-${l.stage}">${STAGE_LABEL[l.stage]}</span>
-    </div>`).join('') : '<div class="empty-note">No leads yet — click “+ Add Lead” or wait for website requests.</div>';
-
-  const upcoming = db.jobs.filter(j => j.status === 'scheduled' && j.date >= todayISO())
-    .sort((a,b) => a.date.localeCompare(b.date)).slice(0,6);
-  $('#upcomingJobs').innerHTML = upcoming.length ? upcoming.map(j => {
-    const c = custById(j.customerId);
-    return `<div class="attention-item" onclick="openJobDetail('${j.id}')">
-      <div style="min-width:110px;"><div class="t-money">${fmtDate(j.date)}</div></div>
-      <div style="flex:1;"><div>${c ? esc(c.name) : 'Unknown'}</div>
-        <div class="t-muted" style="font-size:0.74rem;">${esc(j.service)}${j.addons?.length ? ' + ' + j.addons.length + ' add-on(s)' : ''}</div></div>
-      <div class="t-money">${money(jobPrice(j))}</div>
-    </div>`; }).join('') : '<div class="empty-note">No upcoming jobs scheduled.</div>';
-
-  $('#leadBadge').style.display = newLeads ? 'flex' : 'none';
-  $('#leadBadge').textContent = newLeads;
-}
-
-/* ============================================================
-   LEADS
-============================================================ */
-let leadFilter = 'all';
-function renderLeads() {
-  const counts = { all: db.leads.length };
-  STAGES.forEach(s => counts[s] = db.leads.filter(l => l.stage === s).length);
-  $('#leadChips').innerHTML =
-    ['all', ...STAGES].map(s =>
-      `<button class="chip ${leadFilter===s?'active':''}" onclick="leadFilter='${s}';render()">
-        ${s==='all'?'All':STAGE_LABEL[s]}${counts[s] ? `<b>${counts[s]}</b>`:''}
-      </button>`).join('');
-
-  let rows = db.leads.filter(l => leadFilter === 'all' || l.stage === leadFilter)
-    .sort((a,b) => b.createdAt - a.createdAt);
-  $('#leadsTable').innerHTML = rows.length ? rows.map(l => `
-    <tr class="rowlink" onclick="openLeadDetail('${l.id}')">
-      <td><strong>${esc(l.name)}</strong>${l.customerId ? ' <span class="stage stage-won" title="existing customer">CUST</span>' : ''}</td>
-      <td class="t-muted">${esc(l.phone)}<br><span style="font-size:0.72rem;">${esc(l.email||'')}</span></td>
-      <td>${esc(l.service)}${l.addons?.length ? `<div class="t-muted" style="font-size:0.7rem;">+ ${l.addons.join(', ')}</div>`:''}</td>
-      <td>${reqPill(l)}</td>
-      <td class="t-money">${money(leadValue(l))}</td>
-      <td class="t-muted">${ageDays(l.createdAt)}d</td>
-      <td>
-        <select class="status-select" onclick="event.stopPropagation()" onchange="setLeadStage('${l.id}', this.value)">
-          ${STAGES.map(s => `<option value="${s}" ${l.stage===s?'selected':''}>${STAGE_LABEL[s]}</option>`).join('')}
-        </select>
-      </td>
-      <td><button class="btn-ghost btn-danger icon-btn" aria-label="Delete lead" title="Delete lead" onclick="event.stopPropagation();deleteLead('${l.id}')">${ico('trash')}</button></td>
-    </tr>`).join('')
-  : `<tr><td colspan="8"><div class="empty-note">No leads in this view.</div></td></tr>`;
-}
-
-function setLeadStage(id, stage) {
-  const l = db.leads.find(x => x.id === id); if (!l) return;
-  l.stage = stage; l.updatedAt = Date.now();
-  if (stage === 'scheduled' && !db.jobs.some(j => j.leadId === id)) {
-    // auto-create a scheduled job placeholder for today (edit date in Calendar)
-    const j = { id:uid(), leadId:id, customerId:null, date: l.preferredDate || todayISO(),
-      service:l.service, addons:[...(l.addons||[])], notes:l.notes||'',
-      status:'scheduled', priceOverride:null, createdAt:Date.now() };
-    db.jobs.push(j); toast('Job placeholder added to Calendar — set the date there');
-  }
-  saveData(db); render();
-}
-function deleteLead(id) {
-  if (!confirm('Delete this lead?')) return;
-  db.leads = db.leads.filter(l => l.id !== id); saveData(db); closeModal(); render(); toast('Lead deleted');
-}
-function quickCall(phone) { location.href = 'tel:' + phone.replace(/[^0-9+]/g,''); }
-
-/* ---- add / edit lead form ---- */
-function openLeadModal() {
-  const svcOpts = Object.keys(SERVICES).map(s => `<option>${s}</option>`).join('');
-  const addBoxes = Object.keys(ADDONS).map(a => `
-    <div class="checkbox-row"><input type="checkbox" id="la_${btoa(a).replace(/[^a-z0-9]/gi,'')}" value="${esc(a)}"
-      onchange="toggleLA(this)"><label for="la_${btoa(a).replace(/[^a-z0-9]/gi,'')}" style="margin:0;text-transform:none;letter-spacing:0;">${esc(a)} <span class="t-muted">(+${ADDONS[a]})</span></label></div>`).join('');
-  openModal(`
-    <div class="modal-head"><h2>ADD LEAD</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
-    <div class="modal-body">
-      <div class="field"><label>Full Name *</label><input id="lf_name" placeholder="Jane Smith"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div class="field"><label>Phone *</label><input id="lf_phone" placeholder="315-555-0123"></div>
-        <div class="field"><label>Email</label><input id="lf_email" placeholder="jane@email.com"></div>
-      </div>
-      <div class="field"><label>Address / Location *</label><input id="lf_address" placeholder="Where should we come to you?"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div class="field"><label for="lf_date">Requested date</label><input type="date" id="lf_date"></div>
-        <div class="field"><label for="lf_time">Time</label><select id="lf_time"><option>Morning (8–11am)</option><option>Midday (11am–2pm)</option><option>Afternoon (2–5pm)</option><option>Evening (5–7pm)</option><option selected>Flexible</option></select></div>
-      </div>
-      <div class="field"><label>Service *</label><select id="lf_service"><option value="">— choose —</option>${svcOpts}</select></div>
-      <div class="field"><label>Add-ons</label>${addBoxes}</div>
-      <div class="field"><label>Notes</label><textarea id="lf_notes" rows="3" placeholder="Vehicle, preferred day/time, anything else"></textarea></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal()">CANCEL</button>
-      <button class="btn" onclick="saveNewLead()">SAVE LEAD</button>
-    </div>`);
-}
-let pickedAddons = [];
-function toggleLA(box) {
-  const a = box.value;
-  pickedAddons = box.checked ? [...pickedAddons, a] : pickedAddons.filter(x => x !== a);
-}
-function saveNewLead() {
-  const name = $('#lf_name').value.trim(), phone = $('#lf_phone').value.trim();
-  const service = $('#lf_service').value, address = $('#lf_address').value.trim();
-  if (!name || !phone || !service || !address) return toast('Name, phone, address & service are required');
-  db.leads.push({ id:uid(), name, phone, email:$('#lf_email').value.trim(), address,
-    service, addons:[...pickedAddons], notes:$('#lf_notes').value.trim(),
-    preferredDate:$('#lf_date').value, preferredTime:$('#lf_date').value ? $('#lf_time').value : '',
-    stage:'new', customerId:null, createdAt:Date.now(), updatedAt:Date.now() });
-  saveData(db); pickedAddons = []; closeModal(); render(); toast('Lead added');
-}
-
-/* ---- lead detail ---- */
-function openLeadDetail(id) {
-  const l = db.leads.find(x => x.id === id); if (!l) return;
-  const jobs = db.jobs.filter(j => j.leadId === id);
-  openModal(`
-    <div class="modal-head"><h2>${esc(l.name)}</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
-    <div class="modal-body">
-      <div class="detail-grid">
-        <div class="detail-item"><div class="d-label">Phone</div>
-          <div class="d-val"><a href="tel:${esc(l.phone)}">${esc(l.phone)}</a></div></div>
-        <div class="detail-item"><div class="d-label">Email</div>
-          <div class="d-val"><a href="mailto:${esc(l.email)}">${esc(l.email||'—')}</a></div></div>
-        <div class="detail-item"><div class="d-label">Address</div><div class="d-val">${esc(l.address)}</div></div>
-        <div class="detail-item"><div class="d-label">Added</div>
-          <div class="d-val">${new Date(l.createdAt).toLocaleDateString()} (${ageDays(l.createdAt)}d ago)</div></div>
-      </div>
-      ${requestBox(l)}
-      <div class="detail-item" style="margin-bottom:1rem;"><div class="d-label">Service</div>
-        <div class="d-val">${esc(l.service)} <span class="t-money" style="color:var(--red);">· ${money(leadValue(l))}</span></div></div>
-      ${l.addons?.length ? `<div class="d-label">Add-ons</div><div class="addons-list">${l.addons.map(a=>`<span>${esc(a)}</span>`).join('')}</div>` : ''}
-      ${l.notes ? `<div class="section-label">NOTES</div><p style="font-size:0.85rem;color:var(--muted);line-height:1.7;">${esc(l.notes)}</p>` : ''}
-      ${jobs.length ? `<div class="section-label">JOBS FROM THIS LEAD</div>
-        <ul class="timeline">${jobs.map(j=>`<li><span class="tl-date">${fmtDate(j.date)}</span>
-          <span>${esc(j.service)}</span><span class="stage ${j.status==='completed'?'stage-won':'stage-scheduled'}">${j.status}</span></li>`).join('')}</ul>`:''}
-      <div class="section-label">MOVE STAGE</div>
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-        ${STAGES.map(s => `<button class="chip ${l.stage===s?'active':''}" onclick="setLeadStage('${l.id}','${s}');openLeadDetail('${l.id}')">${STAGE_LABEL[s]}</button>`).join('')}
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost btn-danger" onclick="deleteLead('${l.id}')">DELETE</button>
-      <button class="btn-ghost" onclick="convertLead('${l.id}')">${ico('user-plus')} CONVERT TO CUSTOMER</button>
-    </div>`);
-}
-function requestBox(l) {
-  const ok = l.stage === 'scheduled' && l.confirmedDate;
-  const when = ok ? l.confirmedDate : l.preferredDate;
-  const first = String(l.name || '').split(' ')[0];
-  const dTxt = when ? new Date(when + 'T00:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }) : '';
-  const msg = ok
-    ? `Hi ${first}, this is Premium Finish Auto Detailing. You're confirmed for ${dTxt}${l.preferredTime && l.preferredTime !== 'Flexible' ? ' (' + l.preferredTime + ')' : ''}. See you then!`
-    : `Hi ${first}, this is Premium Finish Auto Detailing about your ${String(l.service || 'detail').replace(/\s*\([^)]*\)\s*$/, '')} request${dTxt ? ' for ' + dTxt : ''}. ${dTxt ? 'Does that day still work for you?' : 'What day works best for you?'}`;
-  const tel = String(l.phone || '').replace(/[^0-9+]/g, '');
-  const enc = encodeURIComponent;
-  return `<div class="req-box ${ok ? 'ok' : ''}">
-    <div class="req-box-head">${ico('calendar')} ${ok ? 'Confirmed appointment' : 'Requested appointment'}</div>
-    <div class="req-when">${when ? esc(dTxt) + (shortTime(l.preferredTime) ? ' · ' + esc(shortTime(l.preferredTime)) : '') : 'No date picked yet'}</div>
-    <div class="req-row">
-      <div class="field"><label for="cfDate">${ok ? 'Move to another date' : 'Confirm for'}</label><input type="date" id="cfDate" value="${when || todayISO()}"></div>
-      <button class="btn" onclick="confirmLead('${l.id}', document.getElementById('cfDate').value)">${ico('check')} ${ok ? 'Update' : 'Confirm'}</button>
-    </div>
-    <div class="req-contact">${ok ? 'Let them know:' : 'Contact about it:'}
-      ${tel ? `<a class="btn-ghost" href="sms:${tel}?&body=${enc(msg)}" onclick="markContacted('${l.id}')">${ico('inbox')} Text</a>
-      <a class="btn-ghost" href="tel:${tel}" onclick="markContacted('${l.id}')">${ico('phone')} Call</a>` : ''}
-      ${l.email ? `<a class="btn-ghost" href="mailto:${esc(l.email)}?subject=${enc('Your Premium Finish appointment')}&body=${enc(msg)}" onclick="markContacted('${l.id}')">${ico('arrow')} Email</a>` : ''}
-    </div>
-  </div>`;
-}
-function confirmLead(id, date) {
-  const l = db.leads.find(x => x.id === id); if (!l) return;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return toast('Pick a date first');
-  convertLeadSilent(l);
-  const j = db.jobs.find(x => x.leadId === id && x.status !== 'cancelled');
-  if (j) { j.date = date; j.customerId = l.customerId; }
-  else db.jobs.push({ id:uid(), leadId:id, customerId:l.customerId, date, service:l.service, addons:[...(l.addons||[])],
-    notes:[l.preferredTime && 'Time: ' + l.preferredTime, l.notes].filter(Boolean).join(' · '),
-    status:'scheduled', priceOverride:null, completedAt:null, createdAt:Date.now() });
-  l.stage = 'scheduled'; l.confirmedDate = date; l.updatedAt = Date.now();
-  saveData(db); render(); openLeadDetail(id);
-  toast('Confirmed for ' + fmtDate(date) + ' — added to Calendar. Text them to let them know.');
-}
-function markContacted(id) {
-  const l = db.leads.find(x => x.id === id);
-  if (l && l.stage === 'new') { l.stage = 'contacted'; l.updatedAt = Date.now(); saveData(db); render(); }
-}
-function stageAndSchedule(id) {
-  setLeadStage(id, 'scheduled');
-  openLeadDetail(id);
-}
-function convertLead(id) {
-  const l = db.leads.find(x => x.id === id); if (!l) return;
-  if (l.customerId) return toast('Already a customer');
-  // reuse existing customer if same phone
-  let c = db.customers.find(x => x.phone.replace(/[^0-9]/g,'') === l.phone.replace(/[^0-9]/g,''));
-  if (!c) {
-    c = { id:uid(), name:l.name, phone:l.phone, email:l.email||'', address:l.address,
-      notes:l.notes||'', createdAt:Date.now() };
-    db.customers.push(c);
-  }
-  l.customerId = c.id;
-  if (['new','contacted'].includes(l.stage)) l.stage = 'won';
-  saveData(db); openLeadDetail(id); render(); toast('Customer created & linked');
-}
-
-/* ============================================================
-   CUSTOMERS
-============================================================ */
-function custById(id) { return db.customers.find(c => c.id === id); }
-function renderCustomers() {
-  const rows = db.customers.map(c => {
-    const jobs = db.jobs.filter(j => j.customerId === c.id);
-    const ltv = jobs.filter(j => j.status === 'completed').reduce((s,j) => s + jobPrice(j), 0);
-    const last = jobs.filter(j => j.status === 'completed').sort((a,b) => (b.completedAt||'').localeCompare(a.completedAt||''))[0];
-    return { c, n: jobs.length, ltv, last };
-  }).sort((a,b) => b.ltv - a.ltv);
-  const totalLTV = rows.reduce((s,r) => s + r.ltv, 0);
-  $('#custSub').textContent = `${db.customers.length} customers · ${money(totalLTV)} lifetime revenue`;
-  $('#custTable').innerHTML = rows.length ? rows.map(({c,n,ltv,last}) => `
-    <tr class="rowlink" onclick="openCustDetail('${c.id}')">
-      <td><strong>${esc(c.name)}</strong></td>
-      <td class="t-muted">${esc(c.phone)}</td>
-      <td class="t-muted">${esc(c.email||'—')}</td>
-      <td>${n}</td>
-      <td class="t-money">${money(ltv)}</td>
-      <td class="t-muted">${last ? fmtDate(last.date) : '—'}</td>
-    </tr>`).join('')
-  : `<tr><td colspan="6"><div class="empty-note">No customers yet — convert a won lead, or add one manually.</div></td></tr>`;
-}
-function openCustDetail(id) {
-  const c = custById(id); if (!c) return;
-  const jobs = db.jobs.filter(j => j.customerId === id).sort((a,b) => b.date.localeCompare(a.date));
-  const ltv = jobs.filter(j => j.status === 'completed').reduce((s,j) => s + jobPrice(j), 0);
-  openModal(`
-    <div class="modal-head"><h2>${esc(c.name)}</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
-    <div class="modal-body">
-      <div class="detail-grid">
-        <div class="detail-item"><div class="d-label">Phone</div>
-          <div class="d-val"><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div></div>
-        <div class="detail-item"><div class="d-label">Email</div>
-          <div class="d-val"><a href="mailto:${esc(c.email)}">${esc(c.email||'—')}</a></div></div>
-        <div class="detail-item"><div class="d-label">Address</div><div class="d-val">${esc(c.address||'—')}</div></div>
-        <div class="detail-item"><div class="d-label">Lifetime Value</div><div class="d-val t-money" style="color:var(--green);">${money(ltv)}</div></div>
-      </div>
-      <div class="field"><label>Notes (vehicle, preferences…)</label>
-        <textarea id="cf_notes" rows="3">${esc(c.notes||'')}</textarea>
-        <button class="btn-ghost" style="margin-top:0.5rem;" onclick="saveCustNotes('${c.id}')">SAVE NOTES</button></div>
-      <div class="section-label">JOB HISTORY</div>
-      ${jobs.length ? `<ul class="timeline">${jobs.map(j=>`
-        <li style="cursor:pointer;" onclick="openJobDetail('${j.id}')">
-          <span class="tl-date">${fmtDate(j.date)}</span>
-          <span style="flex:1;">${esc(j.service)}${j.addons?.length?` <span class="t-muted" style="font-size:0.7rem;">+${j.addons.length}</span>`:''}</span>
-          <span class="t-money">${money(jobPrice(j))}</span>
-          <span class="stage ${j.status==='completed'?'stage-won':'stage-scheduled'}">${j.status}</span>
-        </li>`).join('')}</ul>` : '<div class="empty-note">No jobs yet.</div>'}
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="openJobModal('${c.id}')">${ico('calendar')} SCHEDULE JOB</button>
-    </div>`);
-}
-function saveCustNotes(id) {
-  const c = custById(id); c.notes = $('#cf_notes').value; saveData(db); toast('Notes saved');
-}
-function openCustomerModal() {
-  openModal(`
-    <div class="modal-head"><h2>ADD CUSTOMER</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
-    <div class="modal-body">
-      <div class="field"><label>Full Name *</label><input id="cf_name" placeholder="Jane Smith"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div class="field"><label>Phone *</label><input id="cf_phone" placeholder="315-555-0123"></div>
-        <div class="field"><label>Email</label><input id="cf_email" placeholder="jane@email.com"></div>
-      </div>
-      <div class="field"><label>Address</label><input id="cf_address" placeholder="Home / work address"></div>
-      <div class="field"><label>Notes</label><textarea id="cf_notes2" rows="2" placeholder="Vehicle, preferences"></textarea></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal()">CANCEL</button>
-      <button class="btn" onclick="saveNewCustomer()">SAVE CUSTOMER</button>
-    </div>`);
-}
-function saveNewCustomer() {
-  const name = $('#cf_name').value.trim(), phone = $('#cf_phone').value.trim();
-  if (!name || !phone) return toast('Name & phone required');
-  db.customers.push({ id:uid(), name, phone, email:$('#cf_email').value.trim(),
-    address:$('#cf_address').value.trim(), notes:$('#cf_notes2').value.trim(), createdAt:Date.now() });
-  saveData(db); closeModal(); render(); toast('Customer added');
-}
-
-/* ============================================================
-   JOBS + CALENDAR
-============================================================ */
-let calY, calM; // calendar year/month
-function renderCalendar() {
-  const first = new Date(calY, calM, 1);
-  $('#calTitle').textContent = first.toLocaleDateString('en-US',{month:'long', year:'numeric'});
-  const startDow = first.getDay();
-  const start = new Date(calY, calM, 1 - startDow);
-  const today = todayISO();
-  let html = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-dow">${d}</div>`).join('');
-  for (let i = 0; i < 42; i++) {
-    const d = new Date(start); d.setDate(start.getDate() + i);
-    const iso = isoLocal(d);
-    const jobs = db.jobs.filter(j => j.date === iso);
-    const reqs = db.leads.filter(l => isPending(l) && l.preferredDate === iso);
-    const isToday = iso === today;
-    html += `<div class="cal-cell ${d.getMonth()!==calM?'other':''} ${isToday?'today':''}">
-      <div class="cal-day">${d.getDate()}</div>
-      ${jobs.map(j => {
-        const c = custById(j.customerId);
-        return `<div class="cal-job ${j.status==='completed'?'done':''}" onclick="openJobDetail('${j.id}')" title="${esc(c?c.name:'')} — ${esc(j.service)}">
-          ${c ? esc(c.name.split(' ')[0]) : 'Job'} · ${esc(j.service.split(' — ')[0])}</div>`;
-      }).join('')}
-      ${reqs.map(l => `<div class="cal-job req" onclick="openLeadDetail('${l.id}')" title="Requested by ${esc(l.name)} — not confirmed yet">${esc(l.name.split(' ')[0])} · requested</div>`).join('')}
-    </div>`;
-  }
-  $('#calGrid').innerHTML = html;
-}
-function calMove(n) { const d = new Date(calY, calM + n, 1); calY = d.getFullYear(); calM = d.getMonth(); renderCalendar(); }
-function calToday() { const d = new Date(); calY = d.getFullYear(); calM = d.getMonth(); renderCalendar(); }
-
-function openJobModal(customerId) {
-  const custs = db.customers.map(c => `<option value="${c.id}" ${c.id===customerId?'selected':''}>${esc(c.name)} — ${esc(c.phone)}</option>`).join('');
-  const svcOpts = Object.keys(SERVICES).map(s => `<option>${s}</option>`).join('');
-  const addBoxes = Object.keys(ADDONS).map((a,i) => `
-    <div class="checkbox-row"><input type="checkbox" id="ja${i}" value="${esc(a)}"
-      onchange="this.checked ? jobAddons.push(this.value) : (jobAddons = jobAddons.filter(x=>x!==this.value))">
-      <label for="ja${i}" style="margin:0;text-transform:none;letter-spacing:0;">${esc(a)} <span class="t-muted">(+${ADDONS[a]})</span></label></div>`).join('');
-  jobAddons = [];
-  openModal(`
-    <div class="modal-head"><h2>SCHEDULE JOB</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
-    <div class="modal-body">
-      <div class="field"><label>Customer *</label><select id="jf_cust"><option value="">— choose customer —</option>${custs}</select></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div class="field"><label>Date *</label><input type="date" id="jf_date" value="${todayISO()}"></div>
-        <div class="field"><label>Service *</label><select id="jf_service">${svcOpts}</select></div>
-      </div>
-      <div class="field"><label>Add-ons</label>${addBoxes}</div>
-      <div class="field"><label>Custom price override (optional)</label><input type="number" id="jf_price" placeholder="leave empty = service + add-ons"></div>
-      <div class="field"><label>Notes</label><textarea id="jf_notes" rows="2"></textarea></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal()">CANCEL</button>
-      <button class="btn" onclick="saveNewJob()">SCHEDULE</button>
-    </div>`);
-}
-let jobAddons = [];
-function saveNewJob() {
-  const custId = $('#jf_cust').value, date = $('#jf_date').value, service = $('#jf_service').value;
-  if (!custId || !date) return toast('Customer & date required');
-  db.jobs.push({ id:uid(), leadId:null, customerId:custId, date, service,
-    addons:[...jobAddons], status:'scheduled',
-    priceOverride: $('#jf_price').value ? Number($('#jf_price').value) : null,
-    notes:$('#jf_notes').value.trim(), completedAt:null, createdAt:Date.now() });
-  saveData(db); closeModal(); render(); toast('Job scheduled');
-}
-function openJobDetail(id) {
-  const j = db.jobs.find(x => x.id === id); if (!j) return;
-  const c = custById(j.customerId);
-  openModal(`
-    <div class="modal-head"><h2>JOB — ${c ? esc(c.name) : 'Unknown'}</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
-    <div class="modal-body">
-      <div class="detail-grid">
-        <div class="detail-item"><div class="d-label">Date</div><div class="d-val">${fmtDate(j.date)}</div></div>
-        <div class="detail-item"><div class="d-label">Status</div><div class="d-val">
-          <select class="status-select" onchange="setJobStatus('${j.id}', this.value)">
-            <option value="scheduled" ${j.status==='scheduled'?'selected':''}>Scheduled</option>
-            <option value="completed" ${j.status==='completed'?'selected':''}>Completed ✔</option>
-            <option value="cancelled" ${j.status==='cancelled'?'selected':''}>Cancelled</option>
-          </select></div></div>
-        <div class="detail-item"><div class="d-label">Service</div><div class="d-val">${esc(j.service)}</div></div>
-        <div class="detail-item"><div class="d-label">Price</div><div class="d-val t-money" style="color:${j.status==='completed'?'var(--green)':'inherit'};">${money(jobPrice(j))}</div></div>
-      </div>
-      ${j.addons?.length ? `<div class="d-label">Add-ons</div><div class="addons-list">${j.addons.map(a=>`<span>${esc(a)}</span>`).join('')}</div>`:''}
-      ${c ? `<div class="section-label">CUSTOMER</div>
-        <div class="attention-item" onclick="closeModal();openCustDetail('${c.id}')">
-          <div style="flex:1;"><div>${esc(c.name)}</div>
-          <div class="t-muted" style="font-size:0.74rem;">${esc(c.phone)} · ${esc(c.address||'')}</div></div>
-          <button class="btn-ghost">VIEW</button></div>`:''}
-      ${j.notes ? `<div class="section-label">NOTES</div><p style="font-size:0.85rem;color:var(--muted);">${esc(j.notes)}</p>`:''}
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost btn-danger" onclick="deleteJob('${j.id}')">DELETE</button>
-      ${j.status !== 'completed' ? `<button class="btn" onclick="setJobStatus('${j.id}','completed');openJobDetail('${j.id}')">${ico('check')} MARK COMPLETED</button>`:''}
-    </div>`);
-}
-function setJobStatus(id, status) {
-  const j = db.jobs.find(x => x.id === id); if (!j) return;
-  j.status = status;
-  j.completedAt = status === 'completed' ? new Date().toISOString().slice(0,10) : null;
-  if (status === 'completed' && j.leadId) {
-    const l = db.leads.find(x => x.id === j.leadId);
-    if (l && !l.customerId) convertLeadSilent(l);
-    if (l) l.stage = 'won';
-  }
-  saveData(db); closeModal(); render(); toast(status === 'completed' ? 'Job completed — revenue counted' : 'Job updated');
-}
-function convertLeadSilent(l) {
-  let c = db.customers.find(x => x.phone.replace(/[^0-9]/g,'') === l.phone.replace(/[^0-9]/g,''));
-  if (!c) {
-    c = { id:uid(), name:l.name, phone:l.phone, email:l.email||'', address:l.address, notes:l.notes||'', createdAt:Date.now() };
-    db.customers.push(c);
-  }
-  l.customerId = c.id;
-}
-function deleteJob(id) {
-  if (!confirm('Delete this job?')) return;
-  db.jobs = db.jobs.filter(j => j.id !== id); saveData(db); closeModal(); render(); toast('Job deleted');
-}
-
-/* ============================================================
-   BACKUP / IMPORT / DEMO / WIPE
-============================================================ */
-function exportData() {
-  const blob = new Blob([JSON.stringify(db, null, 2)], { type:'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `premiumfinish-crm-backup-${todayISO()}.json`;
-  a.click(); URL.revokeObjectURL(a.href);
-  toast('Backup downloaded');
-}
-function importData(ev) {
-  const f = ev.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const d = JSON.parse(r.result);
-      if (!d.leads || !d.customers || !d.jobs) throw 0;
-      db = d; saveData(db); render(); toast('Backup restored');
-    } catch { alert('That file doesn\'t look like a Premium Finish backup.'); }
-  };
-  r.readAsText(f); ev.target.value = '';
-}
-function loadDemo() {
-  if (db.leads.length || db.customers.length || db.jobs.length) {
-    if (!confirm('This ADDS demo data on top of your existing data. Continue?')) return;
-  }
-  const d = new Date(); const iso = n => isoLocal(new Date(d.getTime() + n*86400000));
-  const c1 = { id:uid(), name:'Mike Thompson', phone:'315-555-0142', email:'mike.t@email.com', address:'142 Maple Ave, Syracuse', notes:'Black F-150 — parks under trees, hates sap', createdAt:Date.now() };
-  const c2 = { id:uid(), name:'Sarah Nguyen', phone:'315-555-0189', email:'snguyen@email.com', address:'88 Waring Rd, Liverpool', notes:'Weekly-ish exterior washes, tipping customer', createdAt:Date.now() };
-  const l1 = { id:uid(), name:'Jessica Romero', phone:'315-555-0117', email:'jromero@email.com', address:'300 Erie Blvd, Syracuse', service:'Full Package — SUV/Truck', addons:['Pet Hair Removal','Headlight Restoration'], notes:'Golden retriever = everywhere. 2021 RAV4.', preferredDate:iso(3), preferredTime:'Morning (8–11am)', stage:'new', customerId:null, createdAt:Date.now()-3*86400000, updatedAt:Date.now() };
-  const l2 = { id:uid(), name:'Dan Kowalski', phone:'315-555-0163', email:'', address:'12 Kirkwood St, Syracuse', service:'Interior Detail — Sedan', addons:[], notes:'Works nights — call after 3pm', preferredDate:iso(5), preferredTime:'Afternoon (2–5pm)', stage:'contacted', customerId:null, createdAt:Date.now()-1*86400000, updatedAt:Date.now() };
-  const j1 = { id:uid(), leadId:null, customerId:c1.id, date:iso(2), service:'Full Package — SUV/Truck', addons:['Clay Bar / Paint Decon'], status:'scheduled', priceOverride:null, notes:'Driveway, gate code 4412', completedAt:null, createdAt:Date.now() };
-  const j2 = { id:uid(), leadId:null, customerId:c2.id, date:iso(-6), service:'Exterior Wash — Sedan', addons:[], status:'completed', priceOverride:60, notes:'', completedAt:iso(-6), createdAt:Date.now()-8*86400000 };
-  const j3 = { id:uid(), leadId:null, customerId:c1.id, date:iso(-20), service:'Full Package — SUV/Truck', addons:['Pet Hair Removal'], status:'completed', priceOverride:210, notes:'First job — repeat customer!', completedAt:iso(-20), createdAt:Date.now()-22*86400000 };
-  db.customers.push(c1,c2); db.leads.push(l1,l2); db.jobs.push(j1,j2,j3);
-  saveData(db); render(); toast('Demo data loaded');
-}
-function wipeData() {
-  if (!confirm('ERASE ALL leads, customers and jobs? This cannot be undone (export a backup first!).')) return;
-  db = blank(); saveData(db); render(); toast('All data erased');
-}
-
-/* ============================================================
-   SETUP WIZARD — one-time free Supabase connection
-   (Settings → "Cloud Sync" can re-open it anytime)
-============================================================ */
-const SETUP_SQL = `-- Premium Finish CRM — run this ONCE in the Supabase SQL Editor
-create table if not exists crm_state (
-  id int primary key,
-  data jsonb not null,
-  updated_at timestamptz default now()
-);
-create table if not exists website_leads (
-  id bigint generated always as identity primary key,
-  payload jsonb not null,
-  created_at timestamptz default now()
-);
-alter table crm_state enable row level security;
-alter table website_leads enable row level security;
-drop policy if exists "crm_state_public" on crm_state;
-create policy "crm_state_public" on crm_state for all to anon using (true) with check (true);
-drop policy if exists "website_leads_public" on website_leads;
-create policy "website_leads_public" on website_leads for all to anon using (true) with check (true);`;
-
-function openSetupWizard() {
-  openModal(`
-    <div class="modal-head"><h2>AUTOMATIC SETUP — FREE DATABASE</h2><button class="modal-close" aria-label="Close" onclick="closeModal()">${ico('x')}</button></div>
-    <div class="modal-body" style="max-height:62vh; overflow-y:auto;">
-      <p class="hint" style="margin-bottom:1.2rem;">
-        Do this <strong>once</strong> (~5 minutes). After it, website requests appear in this CRM
-        automatically and your data syncs to any device. Uses <strong>Supabase free tier</strong> — no card, no fees.
-      </p>
-
-      <div class="section-label">STEP 1 — CREATE THE DATABASE (2 min)</div>
-      <p class="hint" style="margin-bottom:0.6rem;">
-        1. Go to <a href="https://supabase.com" target="_blank" style="color:var(--red);">supabase.com</a> → sign up free (GitHub or email works).<br>
-        2. Click <strong>New project</strong> → name it <kbd>premiumfinish</kbd> → pick any database password → region closest to you.<br>
-        3. Wait ~2 minutes while it builds.
-      </p>
-
-      <div class="section-label">STEP 2 — CREATE THE TABLES (30 sec)</div>
-      <p class="hint" style="margin-bottom:0.6rem;">
-        In your project: left sidebar → <strong>SQL Editor</strong> → <strong>New query</strong>.
-        Paste this and click <strong>RUN</strong>:
-      </p>
-      <pre style="background:var(--card); border:1px solid var(--border); padding:0.8rem; font-size:0.68rem; line-height:1.5; overflow-x:auto; white-space:pre; margin-bottom:0.6rem;">${esc(SETUP_SQL)}</pre>
-      <button class="btn-ghost" onclick="navigator.clipboard.writeText(SETUP_SQL).then(()=>toast('SQL copied — paste it in the Supabase SQL Editor'))" style="margin-bottom:1.2rem;">${ico('copy')} COPY SQL</button>
-
-      <div class="section-label">STEP 3 — GET YOUR 2 KEYS (1 min)</div>
-      <p class="hint" style="margin-bottom:0.8rem;">
-        In Supabase: <strong>Settings (⚙)</strong> → <strong>API Keys</strong> → copy the
-        <strong>Publishable key</strong> (starts with <kbd>sb_publishable_…</kbd>).<br>
-        ⚠ Never use the "Secret key" here — that one is for servers only.<br>
-        Older Supabase projects may instead show an "anon public" key starting with <kbd>ey…</kbd> — that works too. Paste below:
-      </p>
-      <div class="field"><label>Project URL</label><input id="cfgUrl" placeholder="https://abcdxyz.supabase.co"></div>
-      <div class="field"><label>Publishable key (or legacy anon key)</label><input id="cfgKey" placeholder="sb_publishable_…"></div>
-
-      <div class="section-label">STEP 4 — SAVE & ACTIVATE (30 sec)</div>
-      <p class="hint" style="margin-bottom:0.8rem;">
-        Click below — a new <kbd>supabase-config.js</kbd> file downloads. Put it in your website folder
-        (the same one as <kbd>index.html</kbd>), replacing the blank one, then reload this CRM page. Done.
-      </p>
-      <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-        <button class="btn" onclick="saveConfigFile()">${ico('download')} SAVE CONFIG FILE</button>
-        <button class="btn-ghost" onclick="testConnection()">${ico('zap')} TEST CONNECTION</button>
-        <button class="btn-ghost" onclick="openDiagTab()">${ico('search')} OPEN DIAGNOSTIC TAB</button>
-      </div>
-      <p class="hint" id="cfgTest" style="margin-top:0.8rem; display:none;"></p>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" onclick="closeModal()">LATER (CRM STILL WORKS LOCALLY)</button>
-    </div>`);
-}
-
-function saveConfigFile() {
-  const url = document.getElementById('cfgUrl').value.trim().replace(/\/+$/, '');
-  const key = document.getElementById('cfgKey').value.trim();
-  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)) return toast('URL doesn\'t look right — it should end in .supabase.co (not .com)');
-  if (key.length < 20) return toast('That key looks too short — use the publishable key (starts with sb_publishable_)');
-
-  const content = `/* Premium Finish CRM — Supabase connection (auto-generated)
-   Regenerate via the wizard in admin.html if you ever change projects. */
-window.PF_SUPABASE = {
-  url: "${url}",
-  key: "${key}"
-};
-`;
-  const blob = new Blob([content], { type: 'text/javascript' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'supabase-config.js';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  toast('Config downloaded → move it into your website folder, then reload this page');
-}
-
-function openDiagTab() {
-  const url = document.getElementById('cfgUrl').value.trim().replace(/\/+$/, '');
-  const key = document.getElementById('cfgKey').value.trim();
-  if (!url || !key) return toast('Paste both values first');
-  // Opens Supabase's raw answer in a new tab (apikey via query param).
-  // A wall of JSON = keys fine. An error message = we'll read it directly.
-  window.open(url + '/rest/v1/?apikey=' + encodeURIComponent(key), '_blank');
-  toast('Look at the new tab: JSON wall = good · error message = send it to me');
-}
-
-async function testConnection() {
-  const url = document.getElementById('cfgUrl').value.trim().replace(/\/+$/, '');
-  const key = document.getElementById('cfgKey').value.trim();
-  const out = document.getElementById('cfgTest');
-  out.style.display = 'block';
-  if (!url || !key) { out.style.color = 'var(--red)'; out.textContent = 'Paste both values first.'; return; }
-  if (/\.supabase\.com/i.test(url)) {
-    out.style.color = 'var(--red)';
-    out.textContent = 'Almost! The URL ends in .supabase.co (not .com). Fix the ending and test again.';
-    return;
-  }
-  out.style.color = 'var(--amber)'; out.textContent = 'Testing…';
-  try {
-    const res = await fetch(url + '/rest/v1/crm_state?id=eq.1', { headers: sbHeaders() });
-    if (res.ok) { out.style.color = 'var(--green)'; out.textContent = '✔ Connected! Save the config file (Step 4) and reload.'; return; }
-    let body = '';
-    try { body = JSON.stringify(await res.json()); } catch { body = ''; }
-    out.style.color = 'var(--red)';
-    if (res.status === 401) {
-      out.textContent = 'HTTP 401 — the KEY is being rejected. Re-copy it from Supabase → Settings → API Keys using the copy icon (don\'t type it by hand — it\'s easy to mistype). Then test again.';
-      if (/invalid api key/i.test(body)) out.textContent += ' (Supabase says: invalid API key)';
-    } else if (res.status === 404 || res.status === 403 || res.status === 425) {
-      out.textContent = 'Connection is good, but the tables don\'t exist yet → run the Step 2 SQL in Supabase\'s SQL Editor, then test again.';
-    } else {
-      out.textContent = 'Could not connect (HTTP ' + res.status + ') → re-check URL & key. ' + body.slice(0, 120);
-    }
-  } catch (e) {
-    out.style.color = 'var(--red)';
-    out.textContent = 'Could not reach Supabase → re-check the URL (should end in .supabase.co).';
-  }
-}
-
-
-function render() {
-  // leads badge stays accurate on every view
-  const nNew = db.leads.filter(l => l.stage === 'new').length;
-  const b = $('#leadBadge');
-  b.style.display = nNew ? 'flex' : 'none';
-  b.textContent = nNew;
-
-  if (currentView === 'dashboard') renderDashboard();
-  else if (currentView === 'leads') renderLeads();
-  else if (currentView === 'customers') renderCustomers();
-  else if (currentView === 'calendar') renderCalendar();
-}
-async function boot() {
-  if (!localStorage.getItem(PW_KEY)) localStorage.setItem(PW_KEY, await hashPw('detail2025'));
-  calToday();
-  render();
-
-  if (cloudOn()) {
-    setCloudStatus('connecting');
-    try {
-      await cloudInitialSync();
-      cloudReady = true;
-      setCloudStatus('live');
-      await pollWebLeads();               // catch anything that arrived while CRM was closed
-      setInterval(cloudTick, 20000);      // then check every 20s, forever
-    } catch (e) {
-      console.warn('cloud init failed:', e);
-      setCloudStatus('error');
-    }
-  } else {
-    setCloudStatus('off');
-    if (sessionStorage.getItem('pf_wizard_shown') !== '1') {
-      sessionStorage.setItem('pf_wizard_shown', '1');
-      openSetupWizard();                  // first login → guide through the one-time setup
-    }
-  }
-}
-if (sessionStorage.getItem('pf_crm_unlocked') === '1') {
-  $('#loginScreen').style.display = 'none';
-  $('#app').style.display = 'block';
-  boot();
-}
-</script>
 </body>
 </html>
