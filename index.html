@@ -30,6 +30,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
   <script src="supabase-config.js"></script>
+  <script>
+    /* Fallback connection (same as the website) so the CRM still syncs when
+       supabase-config.js isn't uploaded next to it, e.g. on GitHub Pages.
+       The publishable key is designed to be public. */
+    window.PF_SUPABASE = window.PF_SUPABASE || {
+      url: "https://bhbxybbqcornwjtxwbhz.supabase.co",
+      key: "sb_publishable_dYIHFqm5TT15n6KJ49M3Lg_DRqu4G7p"
+    };
+  </script>
   <meta name="theme-color" content="#09090b" />
 
   <style>
@@ -385,6 +394,29 @@
     pre { border-radius: var(--r-sm); }
     .steps-list { display:grid; gap:0.5rem; }
 
+    /* ── DATE REQUESTS ─────────────────────── */
+    .req-pill { display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; font-weight:600; white-space:nowrap;
+      color:#f5b94a; background:rgba(245,165,36,0.1); border:1px solid rgba(245,165,36,0.3); border-radius:999px; padding:0.2rem 0.6rem; }
+    .req-pill.ok { color:#7cb5fb; background:rgba(96,165,250,0.1); border-color:rgba(96,165,250,0.3); }
+    .req-pill.past { color:#ff8a80; background:rgba(229,55,43,0.1); border-color:rgba(229,55,43,0.3); }
+    .req-date { min-width:54px; text-align:center; border-radius:var(--r-sm); padding:0.35rem 0.3rem; background:rgba(245,165,36,0.12); color:#f5b94a; }
+    .req-date b { display:block; font-family:'Bebas Neue'; font-size:1.6rem; font-weight:400; line-height:1; }
+    .req-date small { font-size:0.62rem; font-weight:700; letter-spacing:0.06em; }
+    .req-date.past { background:var(--red-soft); color:#ff8a80; }
+    .req-actions { display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:flex-end; }
+    .req-actions .btn, .req-actions .btn-ghost { min-height:36px; padding:0.4rem 0.8rem; font-size:0.74rem; }
+    .req-box { border:1px solid rgba(245,165,36,0.35); background:rgba(245,165,36,0.06); border-radius:var(--r); padding:1rem; margin-bottom:1.2rem; }
+    .req-box.ok { border-color:rgba(96,165,250,0.35); background:rgba(96,165,250,0.06); }
+    .req-box-head { display:flex; align-items:center; gap:0.5rem; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#f5b94a; }
+    .req-box.ok .req-box-head { color:#7cb5fb; }
+    .req-when { font-family:'Bebas Neue'; font-size:1.6rem; letter-spacing:1px; margin:0.3rem 0 0.8rem; }
+    .req-row { display:flex; gap:0.6rem; align-items:flex-end; flex-wrap:wrap; }
+    .req-row .field { flex:1; min-width:160px; margin:0 !important; }
+    .req-contact { display:flex; gap:0.4rem; flex-wrap:wrap; align-items:center; margin-top:0.9rem; padding-top:0.9rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--muted); }
+    .req-contact a { text-decoration:none; min-height:36px; padding:0.4rem 0.8rem; font-size:0.74rem; }
+    .cal-job.req { background:rgba(245,165,36,0.1); border-left:3px dashed var(--amber); color:#f5d08a; }
+    .cal-legend .lg-req::before { background:var(--amber); }
+
     /* ── RESPONSIVE ────────────────────────── */
     @media (max-width: 1100px) {
       .stats-grid { grid-template-columns:repeat(2,1fr); }
@@ -534,6 +566,11 @@
 
           <div class="stats-grid" id="statsGrid"></div>
 
+          <div class="panel">
+            <div class="panel-head"><span><svg class="i"><use href="#i-calendar"/></svg> Date requests</span><span class="ph-note">customers waiting for you to confirm</span></div>
+            <div class="panel-body list" id="dateRequests"></div>
+          </div>
+
           <div class="dash-cols">
             <div class="panel">
               <div class="panel-head"><span><svg class="i"><use href="#i-alert"/></svg> Needs attention</span><span class="ph-note">leads waiting 2+ days</span></div>
@@ -563,7 +600,7 @@
             <div style="overflow-x:auto;">
               <table>
                 <thead><tr>
-                  <th>Name</th><th>Contact</th><th>Service</th><th>Value</th>
+                  <th>Name</th><th>Contact</th><th>Service</th><th>Requested</th><th>Value</th>
                   <th>Age</th><th>Stage</th><th><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Actions</span></th>
                 </tr></thead>
                 <tbody id="leadsTable"></tbody>
@@ -609,6 +646,7 @@
             <div class="cal-legend">
               <span>Scheduled</span>
               <span class="lg-done">Completed</span>
+              <span class="lg-req">Requested (not confirmed)</span>
             </div>
           </div>
         </section>
@@ -824,6 +862,8 @@ async function pollWebLeads() {
         service: p.service || '',
         addons:  Array.isArray(p.addons) ? p.addons : [],
         notes:   p.notes   || '',
+        preferredDate: /^\d{4}-\d{2}-\d{2}$/.test(p.preferredDate || '') ? p.preferredDate : '',
+        preferredTime: String(p.preferredTime || '').slice(0, 40),
         stage: 'new', customerId: null,
         createdAt: Date.now(), updatedAt: Date.now()
       });
@@ -882,6 +922,14 @@ function isoLocal(d) {
   return d.getFullYear() + '-' +
     String(d.getMonth()+1).padStart(2,'0') + '-' +
     String(d.getDate()).padStart(2,'0');
+}
+const isPending = l => l.preferredDate && ['new','contacted'].includes(l.stage);
+const shortTime = t => t && t !== 'Flexible' ? String(t).split(' (')[0] : (t ? 'Flexible' : '');
+function reqPill(l) {
+  if (l.confirmedDate && l.stage === 'scheduled') return `<span class="req-pill ok">${ico('check')} ${fmtDate(l.confirmedDate)}</span>`;
+  if (!l.preferredDate) return '<span class="t-muted">—</span>';
+  const past = l.preferredDate < todayISO() && isPending(l);
+  return `<span class="req-pill ${past ? 'past' : ''}">${ico('calendar')} ${fmtDate(l.preferredDate)}${shortTime(l.preferredTime) ? ' · ' + esc(shortTime(l.preferredTime)) : ''}</span>`;
 }
 function ageDays(iso) { return Math.floor((Date.now() - new Date(iso)) / 86400000); }
 function svcPrice(name) {
@@ -1017,6 +1065,21 @@ function renderDashboard() {
       <button class="btn-ghost" onclick="event.stopPropagation(); quickCall('${esc(l.phone)}')">${ico('phone')} Call</button>
     </div>`).join('') : '<div class="empty-note">Nothing stuck — every lead has been touched recently.</div>';
 
+  const reqs = db.leads.filter(isPending).sort((a,b) => a.preferredDate.localeCompare(b.preferredDate));
+  $('#dateRequests').innerHTML = reqs.length ? reqs.map(l => {
+    const d = new Date(l.preferredDate + 'T00:00:00'), past = l.preferredDate < todayISO();
+    return `<div class="attention-item" onclick="openLeadDetail('${l.id}')">
+      <div class="req-date ${past ? 'past' : ''}"><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-US',{month:'short'}).toUpperCase()}</small></div>
+      <div style="flex:1;min-width:0;">
+        <div>${esc(l.name)} <span class="stage stage-${l.stage}" style="margin-left:0.4rem;">${STAGE_LABEL[l.stage]}</span></div>
+        <div class="t-muted" style="font-size:0.78rem;">${d.toLocaleDateString('en-US',{weekday:'long'})}${shortTime(l.preferredTime) ? ' · ' + esc(shortTime(l.preferredTime)) : ''} · ${esc(l.service)}${past ? ' · <span style="color:#ff8a80;">date passed — pick a new one</span>' : ''}</div>
+      </div>
+      <div class="req-actions">
+        <button class="btn-ghost" onclick="event.stopPropagation();openLeadDetail('${l.id}')">${ico('phone')} Contact</button>
+        ${past ? '' : `<button class="btn" onclick="event.stopPropagation();confirmLead('${l.id}','${l.preferredDate}')">${ico('check')} Confirm</button>`}
+      </div>
+    </div>`; }).join('') : '<div class="empty-note">No date requests waiting — new website bookings show up here.</div>';
+
   const recent = [...db.leads].sort((a,b) => b.createdAt - a.createdAt).slice(0,5);
   $('#recentLeads').innerHTML = recent.length ? recent.map(l => `
     <div class="attention-item" onclick="openLeadDetail('${l.id}')">
@@ -1062,6 +1125,7 @@ function renderLeads() {
       <td><strong>${esc(l.name)}</strong>${l.customerId ? ' <span class="stage stage-won" title="existing customer">CUST</span>' : ''}</td>
       <td class="t-muted">${esc(l.phone)}<br><span style="font-size:0.72rem;">${esc(l.email||'')}</span></td>
       <td>${esc(l.service)}${l.addons?.length ? `<div class="t-muted" style="font-size:0.7rem;">+ ${l.addons.join(', ')}</div>`:''}</td>
+      <td>${reqPill(l)}</td>
       <td class="t-money">${money(leadValue(l))}</td>
       <td class="t-muted">${ageDays(l.createdAt)}d</td>
       <td>
@@ -1071,7 +1135,7 @@ function renderLeads() {
       </td>
       <td><button class="btn-ghost btn-danger icon-btn" aria-label="Delete lead" title="Delete lead" onclick="event.stopPropagation();deleteLead('${l.id}')">${ico('trash')}</button></td>
     </tr>`).join('')
-  : `<tr><td colspan="7"><div class="empty-note">No leads in this view.</div></td></tr>`;
+  : `<tr><td colspan="8"><div class="empty-note">No leads in this view.</div></td></tr>`;
 }
 
 function setLeadStage(id, stage) {
@@ -1079,7 +1143,7 @@ function setLeadStage(id, stage) {
   l.stage = stage; l.updatedAt = Date.now();
   if (stage === 'scheduled' && !db.jobs.some(j => j.leadId === id)) {
     // auto-create a scheduled job placeholder for today (edit date in Calendar)
-    const j = { id:uid(), leadId:id, customerId:null, date: todayISO(),
+    const j = { id:uid(), leadId:id, customerId:null, date: l.preferredDate || todayISO(),
       service:l.service, addons:[...(l.addons||[])], notes:l.notes||'',
       status:'scheduled', priceOverride:null, createdAt:Date.now() };
     db.jobs.push(j); toast('Job placeholder added to Calendar — set the date there');
@@ -1107,6 +1171,10 @@ function openLeadModal() {
         <div class="field"><label>Email</label><input id="lf_email" placeholder="jane@email.com"></div>
       </div>
       <div class="field"><label>Address / Location *</label><input id="lf_address" placeholder="Where should we come to you?"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="field"><label for="lf_date">Requested date</label><input type="date" id="lf_date"></div>
+        <div class="field"><label for="lf_time">Time</label><select id="lf_time"><option>Morning (8–11am)</option><option>Midday (11am–2pm)</option><option>Afternoon (2–5pm)</option><option>Evening (5–7pm)</option><option selected>Flexible</option></select></div>
+      </div>
       <div class="field"><label>Service *</label><select id="lf_service"><option value="">— choose —</option>${svcOpts}</select></div>
       <div class="field"><label>Add-ons</label>${addBoxes}</div>
       <div class="field"><label>Notes</label><textarea id="lf_notes" rows="3" placeholder="Vehicle, preferred day/time, anything else"></textarea></div>
@@ -1127,6 +1195,7 @@ function saveNewLead() {
   if (!name || !phone || !service || !address) return toast('Name, phone, address & service are required');
   db.leads.push({ id:uid(), name, phone, email:$('#lf_email').value.trim(), address,
     service, addons:[...pickedAddons], notes:$('#lf_notes').value.trim(),
+    preferredDate:$('#lf_date').value, preferredTime:$('#lf_date').value ? $('#lf_time').value : '',
     stage:'new', customerId:null, createdAt:Date.now(), updatedAt:Date.now() });
   saveData(db); pickedAddons = []; closeModal(); render(); toast('Lead added');
 }
@@ -1147,6 +1216,7 @@ function openLeadDetail(id) {
         <div class="detail-item"><div class="d-label">Added</div>
           <div class="d-val">${new Date(l.createdAt).toLocaleDateString()} (${ageDays(l.createdAt)}d ago)</div></div>
       </div>
+      ${requestBox(l)}
       <div class="detail-item" style="margin-bottom:1rem;"><div class="d-label">Service</div>
         <div class="d-val">${esc(l.service)} <span class="t-money" style="color:var(--red);">· ${money(leadValue(l))}</span></div></div>
       ${l.addons?.length ? `<div class="d-label">Add-ons</div><div class="addons-list">${l.addons.map(a=>`<span>${esc(a)}</span>`).join('')}</div>` : ''}
@@ -1162,8 +1232,48 @@ function openLeadDetail(id) {
     <div class="modal-foot">
       <button class="btn-ghost btn-danger" onclick="deleteLead('${l.id}')">DELETE</button>
       <button class="btn-ghost" onclick="convertLead('${l.id}')">${ico('user-plus')} CONVERT TO CUSTOMER</button>
-      ${l.stage !== 'scheduled' ? `<button class="btn" onclick="stageAndSchedule('${l.id}')">${ico('calendar')} SCHEDULE JOB</button>` : ''}
     </div>`);
+}
+function requestBox(l) {
+  const ok = l.stage === 'scheduled' && l.confirmedDate;
+  const when = ok ? l.confirmedDate : l.preferredDate;
+  const first = String(l.name || '').split(' ')[0];
+  const dTxt = when ? new Date(when + 'T00:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }) : '';
+  const msg = ok
+    ? `Hi ${first}, this is Premium Finish Auto Detailing. You're confirmed for ${dTxt}${l.preferredTime && l.preferredTime !== 'Flexible' ? ' (' + l.preferredTime + ')' : ''}. See you then!`
+    : `Hi ${first}, this is Premium Finish Auto Detailing about your ${String(l.service || 'detail').replace(/\s*\([^)]*\)\s*$/, '')} request${dTxt ? ' for ' + dTxt : ''}. ${dTxt ? 'Does that day still work for you?' : 'What day works best for you?'}`;
+  const tel = String(l.phone || '').replace(/[^0-9+]/g, '');
+  const enc = encodeURIComponent;
+  return `<div class="req-box ${ok ? 'ok' : ''}">
+    <div class="req-box-head">${ico('calendar')} ${ok ? 'Confirmed appointment' : 'Requested appointment'}</div>
+    <div class="req-when">${when ? esc(dTxt) + (shortTime(l.preferredTime) ? ' · ' + esc(shortTime(l.preferredTime)) : '') : 'No date picked yet'}</div>
+    <div class="req-row">
+      <div class="field"><label for="cfDate">${ok ? 'Move to another date' : 'Confirm for'}</label><input type="date" id="cfDate" value="${when || todayISO()}"></div>
+      <button class="btn" onclick="confirmLead('${l.id}', document.getElementById('cfDate').value)">${ico('check')} ${ok ? 'Update' : 'Confirm'}</button>
+    </div>
+    <div class="req-contact">${ok ? 'Let them know:' : 'Contact about it:'}
+      ${tel ? `<a class="btn-ghost" href="sms:${tel}?&body=${enc(msg)}" onclick="markContacted('${l.id}')">${ico('inbox')} Text</a>
+      <a class="btn-ghost" href="tel:${tel}" onclick="markContacted('${l.id}')">${ico('phone')} Call</a>` : ''}
+      ${l.email ? `<a class="btn-ghost" href="mailto:${esc(l.email)}?subject=${enc('Your Premium Finish appointment')}&body=${enc(msg)}" onclick="markContacted('${l.id}')">${ico('arrow')} Email</a>` : ''}
+    </div>
+  </div>`;
+}
+function confirmLead(id, date) {
+  const l = db.leads.find(x => x.id === id); if (!l) return;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return toast('Pick a date first');
+  convertLeadSilent(l);
+  const j = db.jobs.find(x => x.leadId === id && x.status !== 'cancelled');
+  if (j) { j.date = date; j.customerId = l.customerId; }
+  else db.jobs.push({ id:uid(), leadId:id, customerId:l.customerId, date, service:l.service, addons:[...(l.addons||[])],
+    notes:[l.preferredTime && 'Time: ' + l.preferredTime, l.notes].filter(Boolean).join(' · '),
+    status:'scheduled', priceOverride:null, completedAt:null, createdAt:Date.now() });
+  l.stage = 'scheduled'; l.confirmedDate = date; l.updatedAt = Date.now();
+  saveData(db); render(); openLeadDetail(id);
+  toast('Confirmed for ' + fmtDate(date) + ' — added to Calendar. Text them to let them know.');
+}
+function markContacted(id) {
+  const l = db.leads.find(x => x.id === id);
+  if (l && l.stage === 'new') { l.stage = 'contacted'; l.updatedAt = Date.now(); saveData(db); render(); }
 }
 function stageAndSchedule(id) {
   setLeadStage(id, 'scheduled');
@@ -1282,6 +1392,7 @@ function renderCalendar() {
     const d = new Date(start); d.setDate(start.getDate() + i);
     const iso = isoLocal(d);
     const jobs = db.jobs.filter(j => j.date === iso);
+    const reqs = db.leads.filter(l => isPending(l) && l.preferredDate === iso);
     const isToday = iso === today;
     html += `<div class="cal-cell ${d.getMonth()!==calM?'other':''} ${isToday?'today':''}">
       <div class="cal-day">${d.getDate()}</div>
@@ -1290,6 +1401,7 @@ function renderCalendar() {
         return `<div class="cal-job ${j.status==='completed'?'done':''}" onclick="openJobDetail('${j.id}')" title="${esc(c?c.name:'')} — ${esc(j.service)}">
           ${c ? esc(c.name.split(' ')[0]) : 'Job'} · ${esc(j.service.split(' — ')[0])}</div>`;
       }).join('')}
+      ${reqs.map(l => `<div class="cal-job req" onclick="openLeadDetail('${l.id}')" title="Requested by ${esc(l.name)} — not confirmed yet">${esc(l.name.split(' ')[0])} · requested</div>`).join('')}
     </div>`;
   }
   $('#calGrid').innerHTML = html;
@@ -1416,8 +1528,8 @@ function loadDemo() {
   const d = new Date(); const iso = n => isoLocal(new Date(d.getTime() + n*86400000));
   const c1 = { id:uid(), name:'Mike Thompson', phone:'315-555-0142', email:'mike.t@email.com', address:'142 Maple Ave, Syracuse', notes:'Black F-150 — parks under trees, hates sap', createdAt:Date.now() };
   const c2 = { id:uid(), name:'Sarah Nguyen', phone:'315-555-0189', email:'snguyen@email.com', address:'88 Waring Rd, Liverpool', notes:'Weekly-ish exterior washes, tipping customer', createdAt:Date.now() };
-  const l1 = { id:uid(), name:'Jessica Romero', phone:'315-555-0117', email:'jromero@email.com', address:'300 Erie Blvd, Syracuse', service:'Full Package — SUV/Truck', addons:['Pet Hair Removal','Headlight Restoration'], notes:'Golden retriever = everywhere. 2021 RAV4.', stage:'new', customerId:null, createdAt:Date.now()-3*86400000, updatedAt:Date.now() };
-  const l2 = { id:uid(), name:'Dan Kowalski', phone:'315-555-0163', email:'', address:'12 Kirkwood St, Syracuse', service:'Interior Detail — Sedan', addons:[], notes:'Works nights — call after 3pm', stage:'contacted', customerId:null, createdAt:Date.now()-1*86400000, updatedAt:Date.now() };
+  const l1 = { id:uid(), name:'Jessica Romero', phone:'315-555-0117', email:'jromero@email.com', address:'300 Erie Blvd, Syracuse', service:'Full Package — SUV/Truck', addons:['Pet Hair Removal','Headlight Restoration'], notes:'Golden retriever = everywhere. 2021 RAV4.', preferredDate:iso(3), preferredTime:'Morning (8–11am)', stage:'new', customerId:null, createdAt:Date.now()-3*86400000, updatedAt:Date.now() };
+  const l2 = { id:uid(), name:'Dan Kowalski', phone:'315-555-0163', email:'', address:'12 Kirkwood St, Syracuse', service:'Interior Detail — Sedan', addons:[], notes:'Works nights — call after 3pm', preferredDate:iso(5), preferredTime:'Afternoon (2–5pm)', stage:'contacted', customerId:null, createdAt:Date.now()-1*86400000, updatedAt:Date.now() };
   const j1 = { id:uid(), leadId:null, customerId:c1.id, date:iso(2), service:'Full Package — SUV/Truck', addons:['Clay Bar / Paint Decon'], status:'scheduled', priceOverride:null, notes:'Driveway, gate code 4412', completedAt:null, createdAt:Date.now() };
   const j2 = { id:uid(), leadId:null, customerId:c2.id, date:iso(-6), service:'Exterior Wash — Sedan', addons:[], status:'completed', priceOverride:60, notes:'', completedAt:iso(-6), createdAt:Date.now()-8*86400000 };
   const j3 = { id:uid(), leadId:null, customerId:c1.id, date:iso(-20), service:'Full Package — SUV/Truck', addons:['Pet Hair Removal'], status:'completed', priceOverride:210, notes:'First job — repeat customer!', completedAt:iso(-20), createdAt:Date.now()-22*86400000 };
